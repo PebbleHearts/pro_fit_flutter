@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/BottomSheet.dart';
 import 'package:pro_fit_flutter/components/custom-text-field/custom_text_field.dart';
 
-class CategoryBottomSheet extends StatefulWidget {
+class ExerciseBottomSheet extends StatefulWidget {
   final ValueSetter<String> handleSubmit;
-  const CategoryBottomSheet({super.key, required this.handleSubmit});
+  const ExerciseBottomSheet({super.key, required this.handleSubmit});
 
   @override
-  State<CategoryBottomSheet> createState() => _CategoryBottomSheetState();
+  State<ExerciseBottomSheet> createState() => _ExerciseBottomSheetState();
 }
 
-class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
+class _ExerciseBottomSheetState extends State<ExerciseBottomSheet> {
   final TextEditingController _nameController = TextEditingController();
 
   @override

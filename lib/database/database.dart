@@ -6,20 +6,39 @@ import 'package:path/path.dart' as p;
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
 
 part 'database.g.dart';
 
+final _uuid = Uuid();
+
 class Category extends Table {
-  TextColumn get id => text()();
+  TextColumn get id => text().clientDefault(() => _uuid.v4())();
   TextColumn get name => text()();
 }
 
-@DriftDatabase(tables: [Category])
+class Exercise extends Table {
+  TextColumn get id => text().clientDefault(() => _uuid.v4())();
+  TextColumn get name => text()();
+  // TODO: Add a reference constraint for the category field
+  TextColumn get categoryId => text()();
+}
+
+@DriftDatabase(tables: [Category, Exercise])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      beforeOpen: (details) async {
+        await customStatement('PRAGMA foreign_keys = ON');
+      }
+    );
+  }
 }
 
 LazyDatabase _openConnection() {
