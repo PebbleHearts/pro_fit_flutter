@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
+import 'package:pro_fit_flutter/database/converters.dart';
+import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/history_screen/history_item.dart';
 
 class HistoryScreen extends StatelessWidget {
@@ -35,6 +38,34 @@ class HistoryScreen extends StatelessWidget {
     print("Edit clicked $index");
   }
 
+  Future<List<ExerciseLogData>> _loadCategories() async {
+    final database = AppDatabase();
+    List<ExerciseLogData> exerciseLogItems =
+        await database.select(database.exerciseLog).get();
+    return exerciseLogItems;
+  }
+
+  void _fetchWorkoutLog() async {
+    List<ExerciseLogData> exerciseLogItems = await _loadCategories();
+    print(exerciseLogItems[2].workoutRecords.sets[1].repetitions);
+  }
+
+  void _handleWorkoutLogBottomSheetSubmission() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    final database = AppDatabase();
+
+    await database.into(database.exerciseLog).insert(
+          ExerciseLogCompanion.insert(
+            exerciseId: '121220000000111111',
+            logDate: '23-12-2023',
+            description: "some description 2",
+            workoutRecords: WorkoutRecord([WorkoutSet(10, 8), WorkoutSet(10, 12)]),
+            order: 3,
+          ),
+        );
+    _fetchWorkoutLog();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,45 +76,54 @@ class HistoryScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
-            child: Container(
-              color: Colors.deepPurple.withOpacity(0.1),
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const SizedBox(
-                    height: 200,
-                    child: Center(
-                      child: Text(
-                        'History',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ),
+          Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Container(
+                    color: Colors.deepPurple.withOpacity(0.1),
+                    padding: const EdgeInsets.only(bottom: 47),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(
+                          height: 200,
+                          child: Center(
+                            child: Text(
+                              'History',
+                              style: TextStyle(
+                                  fontSize: 25, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        ..._dummyHistoryList
+                            .asMap()
+                            .entries
+                            .map((e) => HistoryItem(
+                                  historyData: e.value,
+                                  onEdit: () => _handleEditHistoryItem(e.key),
+                                  onDelete: () =>
+                                      _handleDeleteHistoryItem(e.key),
+                                ))
+                            .toList(),
+                      ],
                     ),
                   ),
-                  ..._dummyHistoryList
-                      .asMap()
-                      .entries
-                      .map((e) => HistoryItem(
-                            historyData: e.value,
-                            onEdit: () => _handleEditHistoryItem(e.key),
-                            onDelete: () => _handleDeleteHistoryItem(e.key),
-                          ))
-                      .toList(),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(height: 50, child: const HorizontalDateSelector())
+            ],
           ),
           Positioned(
-            bottom: 4.0,
-            right: 4.0,
+            bottom: 55.0,
+            right: 5.0,
             child: FloatingActionButton.small(
               onPressed: () {
                 // Add your FAB onPressed action here
                 print('Floating Action Button pressed');
+                _handleWorkoutLogBottomSheetSubmission();
               },
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
           ),
         ],

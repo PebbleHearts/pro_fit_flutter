@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:drift/drift.dart';
@@ -24,7 +25,16 @@ class Exercise extends Table {
   TextColumn get categoryId => text()();
 }
 
-@DriftDatabase(tables: [Category, Exercise])
+class ExerciseLog extends Table {
+  TextColumn get id => text().clientDefault(() => _uuid.v4())();
+  TextColumn get logDate => text()();
+  TextColumn get exerciseId => text()();
+  TextColumn get workoutRecords => text().map(const WorkoutRecordConverter())();
+  TextColumn get description => text()();
+  IntColumn get order => integer()();
+}
+
+@DriftDatabase(tables: [Category, Exercise, ExerciseLog])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
