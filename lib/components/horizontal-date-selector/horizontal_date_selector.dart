@@ -5,7 +5,11 @@ import 'package:pro_fit_flutter/util/date.dart';
 class HorizontalDateSelector extends StatefulWidget {
   final String selectedDate;
   final ValueSetter<DateTime> onDateTap;
-  const HorizontalDateSelector({super.key, required this.selectedDate, required this.onDateTap,});
+  const HorizontalDateSelector({
+    super.key,
+    required this.selectedDate,
+    required this.onDateTap,
+  });
 
   @override
   State<HorizontalDateSelector> createState() => _HorizontalDateSelectorState();
@@ -45,7 +49,8 @@ class _HorizontalDateSelectorState extends State<HorizontalDateSelector> {
           ..._datesList,
         ];
       });
-      _scrollController.jumpTo(initialMaxScrollExtent + viewportDimension - 0.5);
+      _scrollController
+          .jumpTo(initialMaxScrollExtent + viewportDimension - 0.5,);
     }
   }
 
@@ -53,8 +58,33 @@ class _HorizontalDateSelectorState extends State<HorizontalDateSelector> {
   void initState() {
     super.initState();
     _scrollController.addListener(_loadMore);
-    _datesList =
-        getPrevious30Days(fromDate: DateTime.now(), includeFromDate: true);
+    _datesList = getPrevious30Days(
+      fromDate: DateTime.now(),
+      includeFromDate: true,
+    );
+
+    Future.delayed(Duration(seconds: 2), () {
+      final pixels = _scrollController.position.pixels;
+      final maxScrollExtent = _scrollController.position.maxScrollExtent;
+      final viewportDimension = _scrollController.position.viewportDimension;
+
+      print('pixels ${pixels}');
+      print('maxScrollExtent ${maxScrollExtent}');
+      print('viewportDimension ${viewportDimension}');
+
+      List<DateTime> nextList = getNext30Days(
+        fromDate: _datesList[0],
+        includeFromDate: false,
+      );
+      setState(() {
+        _datesList = [
+          ...nextList,
+          ..._datesList,
+        ];
+      });
+      _scrollController
+          .jumpTo(maxScrollExtent + viewportDimension - 0.5,);
+    });
   }
 
   @override
