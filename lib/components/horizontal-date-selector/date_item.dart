@@ -3,16 +3,23 @@ import 'package:intl/intl.dart';
 
 class DateItem extends StatelessWidget {
   final DateTime dateObject;
+  final String selectedDate;
   const DateItem({
     super.key,
     required this.dateObject,
+    required this.selectedDate,
   });
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('EEE').format(dateObject); // Weekday
-    String formattedDay =
-        DateFormat('d').format(dateObject); // Day of the month
+    String formattedMonth = DateFormat('MM').format(dateObject);
+    String formattedYear = DateFormat('yyyy').format(dateObject);
+    String formattedDate = DateFormat('EEE').format(dateObject);
+    String formattedDay = DateFormat('d').format(dateObject);
+    String formattedDateString = DateFormat('dd-MM-yyyy').format(dateObject);
+
+    bool isDateSelected = formattedDateString == selectedDate;
+
     return Container(
       width: 50,
       height: 50,
@@ -21,13 +28,32 @@ class DateItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Row(
+            children: [
+              Text(
+                formattedYear,
+                style: TextStyle(fontSize: 7, color: isDateSelected ? Colors.black : Colors.grey,),
+              ),
+              const SizedBox(width: 5,),
+              Text(
+                formattedMonth,
+                style: TextStyle(fontSize: 7, color: isDateSelected ? Colors.black : Colors.grey,),
+              ),
+            ],
+          ),
           Text(
             formattedDate,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 12,
+              color: isDateSelected ? Colors.black : Colors.grey,
+            ),
           ),
           Text(
             formattedDay,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(
+              fontSize: 12,
+              color: isDateSelected ? Colors.black : Colors.grey,
+            ),
           ),
         ],
       ),

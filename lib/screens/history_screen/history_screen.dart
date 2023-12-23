@@ -14,6 +14,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   List<ExerciseLogData> _selectedDayWorkoutLog = [];
+  String _selectedDate = '23-12-2023';
 
   void _handleDeleteHistoryItem(int index) {
     print("delete clicked $index");
@@ -98,7 +99,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 50, child: const HorizontalDateSelector())
+              SizedBox(height: 50, child: HorizontalDateSelector(selectedDate: _selectedDate))
             ],
           ),
           Positioned(

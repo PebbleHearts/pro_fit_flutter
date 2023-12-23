@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 
 class RecordItem extends StatelessWidget {
