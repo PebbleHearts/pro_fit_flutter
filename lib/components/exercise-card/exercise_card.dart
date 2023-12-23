@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class ExerciseCard extends StatelessWidget {
   final String name;
+  final bool isSelected;
   final VoidCallback onTap;
   const ExerciseCard({
     super.key,
     required this.name,
+    this.isSelected = false,
     required this.onTap
   });
 
@@ -14,7 +16,7 @@ class ExerciseCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Card(
-        color: Colors.white,
+        color: isSelected ? Colors.deepPurple.withOpacity(0.4) : Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
           child: Row(

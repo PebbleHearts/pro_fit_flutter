@@ -17,12 +17,15 @@ class ExercisesScreen extends StatefulWidget {
 }
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
-    List<ExerciseData> _exercises = [];
+  List<ExerciseData> _exercises = [];
 
   Future<List<ExerciseData>> _loadExercises() async {
     final database = AppDatabase();
-    List<ExerciseData> exerciseItems =
-        await database.select(database.exercise).get();
+    final query = database.select(database.exercise)
+      ..where(
+        (tbl) => tbl.categoryId.equals(widget.categoryId),
+      );
+    final exerciseItems = query.map((row) => row).get();
     print(exerciseItems);
     return exerciseItems;
   }
@@ -38,7 +41,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   void _handleExerciseBottomSheetSubmission(String exerciseName) async {
     WidgetsFlutterBinding.ensureInitialized();
     final database = AppDatabase();
-    print ('the id is : ${widget.categoryId}');
+    print('the id is : ${widget.categoryId}');
     await database.into(database.exercise).insert(
           ExerciseCompanion.insert(
             name: exerciseName,
@@ -62,7 +65,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void _handleExerciseCardClick(String categoryId, String name) {}
 
-    @override
+  @override
   void initState() {
     super.initState();
     _fetchExercises();
@@ -95,9 +98,13 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
               ..._exercises
                   .asMap()
                   .entries
-                  .map((e) => ExerciseCard(
+                  .map(
+                    (e) => ExerciseCard(
                       name: e.value.name,
-                      onTap: () => _handleExerciseCardClick(e.value.id, e.value.name)))
+                      onTap: () =>
+                          _handleExerciseCardClick(e.value.id, e.value.name),
+                    ),
+                  )
                   .toList(),
             ],
           ),

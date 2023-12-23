@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
-import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/database/database.dart';
+import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
 import 'package:pro_fit_flutter/screens/history_screen/history_item.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
   HistoryScreen({super.key});
 
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
   final _dummyHistoryList = [
     HistoryItemDataModel("Bench Press", [
       HistoryRecord(12.5, 15),
@@ -47,22 +52,17 @@ class HistoryScreen extends StatelessWidget {
 
   void _fetchWorkoutLog() async {
     List<ExerciseLogData> exerciseLogItems = await _loadCategories();
-    print(exerciseLogItems[2].workoutRecords.sets[1].repetitions);
+    print('printing log onto screen');
+    print(exerciseLogItems[0].workoutRecords.sets[1].repetitions);
   }
 
-  void _handleWorkoutLogBottomSheetSubmission() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    final database = AppDatabase();
+  void _onAddDailyWorkoutClick(ctx) {
+    Navigator.push(ctx, MaterialPageRoute(builder: (context) => DailyExerciseSelectionScreen()));
+  }
 
-    await database.into(database.exerciseLog).insert(
-          ExerciseLogCompanion.insert(
-            exerciseId: '121220000000111111',
-            logDate: '23-12-2023',
-            description: "some description 2",
-            workoutRecords: WorkoutRecord([WorkoutSet(10, 8), WorkoutSet(10, 12)]),
-            order: 3,
-          ),
-        );
+  @override
+  void initState() {
+    super.initState();
     _fetchWorkoutLog();
   }
 
@@ -121,7 +121,7 @@ class HistoryScreen extends StatelessWidget {
               onPressed: () {
                 // Add your FAB onPressed action here
                 print('Floating Action Button pressed');
-                _handleWorkoutLogBottomSheetSubmission();
+               _onAddDailyWorkoutClick(context);
               },
               child: const Icon(Icons.add),
             ),
