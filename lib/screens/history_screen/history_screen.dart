@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:intl/intl.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
@@ -14,7 +14,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   List<ExerciseLogData> _selectedDayWorkoutLog = [];
-  String _selectedDate = '23-12-2023';
+  String _selectedDate =  DateFormat('dd-MM-yyyy').format(DateTime.now());
 
   void _handleDeleteHistoryItem(int index) {
     print("delete clicked $index");
@@ -24,12 +24,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
     print("Edit clicked $index");
   }
 
-  Future<List<ExerciseLogData>> _loadCategories() async {
+  Future<List<ExerciseLogData>> _loadWorkoutLog() async {
     final database = AppDatabase();
     final query = database.select(database.exerciseLog)
       ..where(
-        // (tbl) => tbl.categoryId.equals('23-12-2023'),
-        (tbl) => tbl.logDate.equals('23-12-2023'),
+        (tbl) => tbl.logDate.equals(_selectedDate),
       );
     final exerciseLogItems = query.map((row) => row).get();
     print(exerciseLogItems);
@@ -37,20 +36,29 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _fetchWorkoutLog() async {
-    List<ExerciseLogData> exerciseLogItems = await _loadCategories();
-    print('printing log onto screen');
+    List<ExerciseLogData> exerciseLogItems = await _loadWorkoutLog();
     setState(() {
       _selectedDayWorkoutLog = exerciseLogItems;
     });
   }
 
   void _onAddDailyWorkoutClick(ctx) {
-    Navigator.push(ctx, MaterialPageRoute(builder: (context) => DailyExerciseSelectionScreen()));
+    Navigator.push(
+        ctx,
+        MaterialPageRoute(
+            builder: (context) => DailyExerciseSelectionScreen()));
   }
 
   @override
   void initState() {
     super.initState();
+    _fetchWorkoutLog();
+  }
+
+  void _handleDateSelection(DateTime currentSelectedDate) {
+    setState(() {
+      _selectedDate = DateFormat('dd-MM-yyyy').format(currentSelectedDate);
+    });
     _fetchWorkoutLog();
   }
 
@@ -99,7 +107,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 50, child: HorizontalDateSelector(selectedDate: _selectedDate))
+              SizedBox(
+                  height: 50,
+                  child: HorizontalDateSelector(
+                    selectedDate: _selectedDate,
+                    onDateTap: _handleDateSelection,
+                  ))
             ],
           ),
           Positioned(
@@ -109,7 +122,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               onPressed: () {
                 // Add your FAB onPressed action here
                 print('Floating Action Button pressed');
-               _onAddDailyWorkoutClick(context);
+                _onAddDailyWorkoutClick(context);
               },
               child: const Icon(Icons.add),
             ),

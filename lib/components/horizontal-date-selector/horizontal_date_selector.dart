@@ -4,7 +4,8 @@ import 'package:pro_fit_flutter/util/date.dart';
 
 class HorizontalDateSelector extends StatefulWidget {
   final String selectedDate;
-  const HorizontalDateSelector({super.key, required this.selectedDate});
+  final ValueSetter<DateTime> onDateTap;
+  const HorizontalDateSelector({super.key, required this.selectedDate, required this.onDateTap,});
 
   @override
   State<HorizontalDateSelector> createState() => _HorizontalDateSelectorState();
@@ -73,6 +74,7 @@ class _HorizontalDateSelectorState extends State<HorizontalDateSelector> {
         return DateItem(
           dateObject: _datesList[index],
           selectedDate: widget.selectedDate,
+          onDateTap: widget.onDateTap,
         );
       },
     );
