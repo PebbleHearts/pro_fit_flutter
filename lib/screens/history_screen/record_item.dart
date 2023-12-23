@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/database/converters.dart';
 
 class RecordItem extends StatelessWidget {
   final int index;
-  final HistoryRecord data;
+  final WorkoutSet data;
   final bool showDivider;
   const RecordItem(
       {super.key,
@@ -26,7 +27,7 @@ class RecordItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("${data.weight}Kg"),
-                    Text("Reps: ${data.reps}"),
+                    Text("Reps: ${data.repetitions}"),
                   ],
                 ),
               )

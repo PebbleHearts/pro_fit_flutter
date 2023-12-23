@@ -13,27 +13,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  final _dummyHistoryList = [
-    HistoryItemDataModel("Bench Press", [
-      HistoryRecord(12.5, 15),
-      HistoryRecord(12.5, 12),
-      HistoryRecord(15, 8)
-    ]),
-    HistoryItemDataModel("Inclined Bench Press",
-        [HistoryRecord(10, 15), HistoryRecord(10, 12), HistoryRecord(10, 12)]),
-    HistoryItemDataModel("Pec Dec Flies",
-        [HistoryRecord(35, 17), HistoryRecord(35, 15), HistoryRecord(35, 12)]),
-    HistoryItemDataModel("Decline Cable Press", [
-      HistoryRecord(12.5, 15),
-      HistoryRecord(15, 13),
-      HistoryRecord(15, 12)
-    ]),
-    HistoryItemDataModel("Triceps Rope Push Down", [
-      HistoryRecord(10, 15),
-      HistoryRecord(12.5, 13),
-      HistoryRecord(12.5, 12)
-    ]),
-  ];
+  List<ExerciseLogData> _selectedDayWorkoutLog = [];
 
   void _handleDeleteHistoryItem(int index) {
     print("delete clicked $index");
@@ -45,15 +25,22 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<List<ExerciseLogData>> _loadCategories() async {
     final database = AppDatabase();
-    List<ExerciseLogData> exerciseLogItems =
-        await database.select(database.exerciseLog).get();
+    final query = database.select(database.exerciseLog)
+      ..where(
+        // (tbl) => tbl.categoryId.equals('23-12-2023'),
+        (tbl) => tbl.logDate.equals('23-12-2023'),
+      );
+    final exerciseLogItems = query.map((row) => row).get();
+    print(exerciseLogItems);
     return exerciseLogItems;
   }
 
   void _fetchWorkoutLog() async {
     List<ExerciseLogData> exerciseLogItems = await _loadCategories();
     print('printing log onto screen');
-    print(exerciseLogItems[0].workoutRecords.sets[1].repetitions);
+    setState(() {
+      _selectedDayWorkoutLog = exerciseLogItems;
+    });
   }
 
   void _onAddDailyWorkoutClick(ctx) {
@@ -96,11 +83,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             ),
                           ),
                         ),
-                        ..._dummyHistoryList
+                        ..._selectedDayWorkoutLog
                             .asMap()
                             .entries
                             .map((e) => HistoryItem(
-                                  historyData: e.value,
+                                  logData: e.value,
                                   onEdit: () => _handleEditHistoryItem(e.key),
                                   onDelete: () =>
                                       _handleDeleteHistoryItem(e.key),
