@@ -5,7 +5,8 @@ import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/exercise_selection_bottom_sheet.dart';
 
 class DailyExerciseSelectionScreen extends StatefulWidget {
-  const DailyExerciseSelectionScreen({super.key});
+  final String selectedDate;
+  const DailyExerciseSelectionScreen({super.key, required this.selectedDate});
 
   @override
   State<DailyExerciseSelectionScreen> createState() =>
@@ -76,17 +77,17 @@ class _DailyExerciseSelectionScreenState
     });
   }
 
-    void _handleWorkoutLogBottomSheetSubmission() async {
+  void _handleWorkoutLogBottomSheetSubmission() async {
     WidgetsFlutterBinding.ensureInitialized();
     final database = AppDatabase();
-
 
     await database.into(database.exerciseLog).insert(
           ExerciseLogCompanion.insert(
             exerciseId: _selectedExercisesForTheDay[0].id,
-            logDate: '23-12-2023',
+            logDate: widget.selectedDate,
             description: "some description 2",
-            workoutRecords: WorkoutRecord([WorkoutSet(10, 8), WorkoutSet(10, 12)]),
+            workoutRecords:
+                WorkoutRecord([WorkoutSet(10, 8), WorkoutSet(10, 12)]),
             order: 4,
           ),
         );
@@ -126,19 +127,19 @@ class _DailyExerciseSelectionScreenState
                     ),
                   )
                   .toList(),
-                              SizedBox(
-              height: 40,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
-                    backgroundColor:
-                        MaterialStatePropertyAll(Colors.deepPurple),
-                    overlayColor:
-                        MaterialStatePropertyAll(Colors.deepPurpleAccent)),
-                child: const Text('Add'),
-                onPressed: _handleWorkoutLogBottomSheetSubmission,
-              ),
-            )
+              SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  style: const ButtonStyle(
+                      foregroundColor: MaterialStatePropertyAll(Colors.white),
+                      backgroundColor:
+                          MaterialStatePropertyAll(Colors.deepPurple),
+                      overlayColor:
+                          MaterialStatePropertyAll(Colors.deepPurpleAccent)),
+                  child: const Text('Add'),
+                  onPressed: _handleWorkoutLogBottomSheetSubmission,
+                ),
+              )
             ],
           ),
         ),

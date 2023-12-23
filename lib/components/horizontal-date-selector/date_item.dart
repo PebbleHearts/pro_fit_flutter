@@ -14,8 +14,6 @@ class DateItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String formattedMonth = DateFormat('MM').format(dateObject);
-    String formattedYear = DateFormat('yyyy').format(dateObject);
     String formattedDate = DateFormat('EEE').format(dateObject);
     String formattedDay = DateFormat('d').format(dateObject);
     String formattedDateString = DateFormat('dd-MM-yyyy').format(dateObject);
@@ -23,11 +21,12 @@ class DateItem extends StatelessWidget {
     bool isDateSelected = formattedDateString == selectedDate;
 
     return InkWell(
+      splashColor: Colors.deepPurple.withOpacity(0.2),
       onTap: () => onDateTap(dateObject),
-      child: Container(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(
         width: 50,
         height: 50,
-        color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,

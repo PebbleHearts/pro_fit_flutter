@@ -14,7 +14,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   List<ExerciseLogData> _selectedDayWorkoutLog = [];
-  String _selectedDate =  DateFormat('dd-MM-yyyy').format(DateTime.now());
+  String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
   void _handleDeleteHistoryItem(int index) {
     print("delete clicked $index");
@@ -44,9 +44,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _onAddDailyWorkoutClick(ctx) {
     Navigator.push(
-        ctx,
-        MaterialPageRoute(
-            builder: (context) => DailyExerciseSelectionScreen()));
+      ctx,
+      MaterialPageRoute(
+        builder: (context) => DailyExerciseSelectionScreen(
+          selectedDate: _selectedDate,
+        ),
+      ),
+    );
   }
 
   @override
