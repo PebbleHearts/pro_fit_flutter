@@ -4,7 +4,7 @@ import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
-import 'package:pro_fit_flutter/screens/history_screen/history_item.dart';
+import 'package:pro_fit_flutter/screens/log_screen/log_item.dart';
 
 class HistoryScreen extends StatefulWidget {
   HistoryScreen({super.key});
@@ -90,7 +90,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           height: 200,
                           child: Center(
                             child: Text(
-                              'History',
+                              'Log',
                               style: TextStyle(
                                   fontSize: 25, fontWeight: FontWeight.bold),
                             ),

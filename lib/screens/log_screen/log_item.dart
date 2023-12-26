@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/database/database.dart';
-import 'package:pro_fit_flutter/screens/history_screen/record_item.dart';
+import 'package:pro_fit_flutter/screens/log_screen/record_item.dart';
 
 class HistoryItem extends StatelessWidget {
   final ExerciseLogData logData;

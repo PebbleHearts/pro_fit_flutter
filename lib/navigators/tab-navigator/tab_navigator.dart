@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-tab-bar/bottom_tab_bar.dart';
 import 'package:pro_fit_flutter/screens/categories_screen/categories_screen.dart';
-import 'package:pro_fit_flutter/screens/history_screen/history_screen.dart';
+import 'package:pro_fit_flutter/screens/log_screen/log_screen.dart';
 import 'package:pro_fit_flutter/screens/routines_screen/routines_screen.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/settings_screen.dart';
 
