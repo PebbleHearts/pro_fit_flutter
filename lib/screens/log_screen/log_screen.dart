@@ -26,12 +26,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<List<ExerciseLogWithExercise>> _loadWorkoutLog() async {
-    // final query = database.select(database.exerciseLog)
-    // ..where(
-    //   (tbl) => tbl.logDate.equals(_selectedDate),
-    // );
-    // final exerciseLogItems = query.map((row) => row).get();
-    // return exerciseLogItems;
     final query = database.select(database.exerciseLog).join([
       drift.innerJoin(database.exercise,
           database.exerciseLog.exerciseId.equalsExp(database.exercise.id)),
