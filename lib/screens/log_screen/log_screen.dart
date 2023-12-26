@@ -83,50 +83,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
           Column(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    color: Colors.deepPurple.withOpacity(0.1),
-                    padding: const EdgeInsets.only(bottom: 47),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const SizedBox(
-                          height: 200,
-                          child: Center(
-                            child: Text(
-                              'Log',
-                              style: TextStyle(
-                                  fontSize: 25, fontWeight: FontWeight.bold),
+                child: Container(
+                  color: Colors.deepPurple.withOpacity(0.1),
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 47),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(
+                            height: 200,
+                            child: Center(
+                              child: Text(
+                                'Log',
+                                style: TextStyle(
+                                    fontSize: 25, fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
-                        ),
-                        ..._selectedDayWorkoutLog
-                            .asMap()
-                            .entries
-                            .map((e) => HistoryItem(
-                                  logData: e.value,
-                                  onEdit: () => _handleEditHistoryItem(e.key),
-                                  onDelete: () =>
-                                      _handleDeleteHistoryItem(e.key),
-                                ))
-                            .toList(),
-                      ],
+                          ..._selectedDayWorkoutLog
+                              .asMap()
+                              .entries
+                              .map((e) => HistoryItem(
+                                    logData: e.value,
+                                    onEdit: () => _handleEditHistoryItem(e.key),
+                                    onDelete: () =>
+                                        _handleDeleteHistoryItem(e.key),
+                                  ))
+                              .toList(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                  height: 50,
-                  child: HorizontalDateSelector(
-                    selectedDate: _selectedDate,
-                    onDateTap: _handleDateSelection,
-                  ))
+                height: 50,
+                child: HorizontalDateSelector(
+                  selectedDate: _selectedDate,
+                  onDateTap: _handleDateSelection,
+                ),
+              )
             ],
           ),
           Positioned(
             bottom: 55.0,
             right: 5.0,
             child: FloatingActionButton.small(
+              heroTag: null,
               onPressed: () {
                 _onAddDailyWorkoutClick(context);
               },

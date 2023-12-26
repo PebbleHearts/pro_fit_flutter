@@ -54,10 +54,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ExercisesScreen(
-          categoryId: categoryId,
-          categoryName: name
-        ),
+        builder: (context) =>
+            ExercisesScreen(categoryId: categoryId, categoryName: name),
       ),
     );
   }
@@ -76,34 +74,45 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         foregroundColor: Colors.white,
         title: const Text('Categories'),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.deepPurple.withOpacity(0.1),
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Text(
-                    'Categories',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.deepPurple.withOpacity(0.1),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            'Categories',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      ..._categories
+                          .asMap()
+                          .entries
+                          .map((e) => CategoryCard(
+                              name: e.value.name,
+                              onTap: () => _handleCategoryCardClick(
+                                  e.value.id, e.value.name)))
+                          .toList(),
+                    ],
                   ),
                 ),
               ),
-              ..._categories
-                  .asMap()
-                  .entries
-                  .map((e) => CategoryCard(
-                      name: e.value.name,
-                      onTap: () => _handleCategoryCardClick(e.value.id, e.value.name)))
-                  .toList(),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.small(
+          heroTag: null,
           child: const Icon(Icons.add),
           onPressed: () {
             _showCustomBottomSheet(context);
@@ -111,6 +120,3 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     );
   }
 }
-
-
-// [CategoryData(id: cc278cd0-17bc-417b-a89f-e7187334278d, name: Category 1), CategoryData(id: 575c4072-8aaf-4708-b492-821d67422319, name: category 2), CategoryData(id: 487d160f-3a9e-420f-9b01-de015b71bcde, name: category 3)]

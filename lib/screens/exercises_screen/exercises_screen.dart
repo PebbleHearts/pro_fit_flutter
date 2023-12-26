@@ -107,6 +107,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton.small(
+          heroTag: null,
           child: const Icon(Icons.add),
           onPressed: () {
             _showCustomBottomSheet(context);

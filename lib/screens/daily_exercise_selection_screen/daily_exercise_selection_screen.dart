@@ -96,49 +96,62 @@ class _DailyExerciseSelectionScreenState
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.deepPurple.withOpacity(0.1),
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(
-                height: 200,
-                child: Center(
-                  child: Text(
-                    'Choose Exercises',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.deepPurple.withOpacity(0.1),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            'Choose Exercises',
+                            style: TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      ..._categories
+                          .asMap()
+                          .entries
+                          .map(
+                            (e) => CategoryCard(
+                              name: e.value.name,
+                              onTap: () => _handleCategoryCardClick(
+                                  e.value.id, e.value.name),
+                            ),
+                          )
+                          .toList(),
+                    ],
                   ),
                 ),
               ),
-              ..._categories
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => CategoryCard(
-                      name: e.value.name,
-                      onTap: () =>
-                          _handleCategoryCardClick(e.value.id, e.value.name),
-                    ),
-                  )
-                  .toList(),
-              SizedBox(
-                height: 40,
-                child: ElevatedButton(
-                  style: const ButtonStyle(
-                      foregroundColor: MaterialStatePropertyAll(Colors.white),
-                      backgroundColor:
-                          MaterialStatePropertyAll(Colors.deepPurple),
-                      overlayColor:
-                          MaterialStatePropertyAll(Colors.deepPurpleAccent)),
-                  child: const Text('Add'),
-                  onPressed: _handleWorkoutLogBottomSheetSubmission,
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+          Container(
+            padding: const EdgeInsets.all(10),
+            color: Colors.deepPurple.withOpacity(0.1),
+            child: SizedBox(
+              height: 40,
+              child: ElevatedButton(
+                style: const ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                    backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+                    overlayColor:
+                        MaterialStatePropertyAll(Colors.deepPurpleAccent)),
+                child: const Text('Add'),
+                onPressed: _handleWorkoutLogBottomSheetSubmission,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
