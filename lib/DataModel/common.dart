@@ -20,6 +20,6 @@ class HistoryItemDataModel {
 class ExerciseLogWithExercise {
   ExerciseLogWithExercise(this.workoutLog, this.exercise);
 
-  final ExerciseLog workoutLog;
-  final Exercise? exercise;
+  final ExerciseLogData workoutLog;
+  final ExerciseData? exercise;
 }

@@ -1,8 +1,8 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
-import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_item.dart';
 
@@ -14,7 +14,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  List<ExerciseLogData> _selectedDayWorkoutLog = [];
+  List<ExerciseLogWithExercise> _selectedDayWorkoutLog = [];
   String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
 
   void _handleDeleteHistoryItem(int index) {
@@ -25,18 +25,28 @@ class _HistoryScreenState extends State<HistoryScreen> {
     print("Edit clicked $index");
   }
 
-  Future<List<ExerciseLogData>> _loadWorkoutLog() async {
-
-    final query = database.select(database.exerciseLog)
+  Future<List<ExerciseLogWithExercise>> _loadWorkoutLog() async {
+    // final query = database.select(database.exerciseLog)
+    // ..where(
+    //   (tbl) => tbl.logDate.equals(_selectedDate),
+    // );
+    // final exerciseLogItems = query.map((row) => row).get();
+    // return exerciseLogItems;
+    final query = database.select(database.exerciseLog).join([
+      drift.innerJoin(database.exercise,
+          database.exerciseLog.exerciseId.equalsExp(database.exercise.id)),
+    ])
       ..where(
-        (tbl) => tbl.logDate.equals(_selectedDate),
+        database.exerciseLog.logDate.equals(_selectedDate),
       );
-    final exerciseLogItems = query.map((row) => row).get();
-    return exerciseLogItems;
+    return query.map((row) {
+      return ExerciseLogWithExercise(row.readTable(database.exerciseLog),
+          row.readTable(database.exercise));
+    }).get();
   }
 
   void _fetchWorkoutLog() async {
-    List<ExerciseLogData> exerciseLogItems = await _loadWorkoutLog();
+    List<ExerciseLogWithExercise> exerciseLogItems = await _loadWorkoutLog();
     setState(() {
       _selectedDayWorkoutLog = exerciseLogItems;
     });

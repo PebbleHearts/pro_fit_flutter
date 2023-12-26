@@ -4,7 +4,7 @@ import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/log_screen/record_item.dart';
 
 class HistoryItem extends StatelessWidget {
-  final ExerciseLogData logData;
+  final ExerciseLogWithExercise logData;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
   const HistoryItem({
@@ -25,7 +25,7 @@ class HistoryItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Exercise Name', style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(logData.exercise!.name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -47,11 +47,11 @@ class HistoryItem extends StatelessWidget {
               ],
             ),
           ),
-          ...logData.workoutRecords.sets.asMap().entries.map(
+          ...logData.workoutLog.workoutRecords.sets.asMap().entries.map(
                 (e) => RecordItem(
                     index: e.key,
                     data: e.value,
-                    showDivider: e.key != logData.workoutRecords.sets.length - 1),
+                    showDivider: e.key != logData.workoutLog.workoutRecords.sets.length - 1),
               )
         ],
       ),
