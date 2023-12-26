@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/database/database.dart';
@@ -20,7 +21,6 @@ class _DailyExerciseSelectionScreenState
   List<ExerciseData> _selectedExercisesForTheDay = [];
 
   Future<List<CategoryData>> _loadCategories() async {
-    final database = AppDatabase();
     List<CategoryData> allCategoryItems =
         await database.select(database.category).get();
     return allCategoryItems;
@@ -28,14 +28,12 @@ class _DailyExerciseSelectionScreenState
 
   void _fetchCategories() async {
     List<CategoryData> allCategoryItems = await _loadCategories();
-    print(allCategoryItems);
     setState(() {
       _categories = allCategoryItems;
     });
   }
 
   Future<List<ExerciseData>> _fetchCategoryExercises(categoryId) async {
-    final database = AppDatabase();
     final query = database.select(database.exercise)
       ..where((tbl) => tbl.categoryId.equals(categoryId));
     final categoryExerciseItems = query.map((row) => row).get();
@@ -43,7 +41,6 @@ class _DailyExerciseSelectionScreenState
   }
 
   void _handleCategoryCardClick(id, name) async {
-    print('$id, $name');
     final List<ExerciseData> categoryExerciseItems =
         await _fetchCategoryExercises(id);
     setState(() {
@@ -79,7 +76,6 @@ class _DailyExerciseSelectionScreenState
 
   void _handleWorkoutLogBottomSheetSubmission() async {
     WidgetsFlutterBinding.ensureInitialized();
-    final database = AppDatabase();
 
     await database.into(database.exerciseLog).insert(
           ExerciseLogCompanion.insert(

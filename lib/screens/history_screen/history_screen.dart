@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
@@ -25,13 +26,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   Future<List<ExerciseLogData>> _loadWorkoutLog() async {
-    final database = AppDatabase();
+
     final query = database.select(database.exerciseLog)
       ..where(
         (tbl) => tbl.logDate.equals(_selectedDate),
       );
     final exerciseLogItems = query.map((row) => row).get();
-    print(exerciseLogItems);
     return exerciseLogItems;
   }
 
@@ -124,8 +124,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
             right: 5.0,
             child: FloatingActionButton.small(
               onPressed: () {
-                // Add your FAB onPressed action here
-                print('Floating Action Button pressed');
                 _onAddDailyWorkoutClick(context);
               },
               child: const Icon(Icons.add),
@@ -133,10 +131,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton.small(
-      //   child: const Icon(Icons.add),
-      //   onPressed: () {},
-      // ),
     );
   }
 }

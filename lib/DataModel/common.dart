@@ -1,3 +1,7 @@
+import 'package:pro_fit_flutter/database/database.dart';
+
+final database = AppDatabase();
+
 class HistoryRecord {
   double weight;
   int reps;
@@ -10,4 +14,12 @@ class HistoryItemDataModel {
   List<HistoryRecord> records;
 
   HistoryItemDataModel(this.name, this.records);
+}
+
+
+class ExerciseLogWithExercise {
+  ExerciseLogWithExercise(this.workoutLog, this.exercise);
+
+  final ExerciseLog workoutLog;
+  final Exercise? exercise;
 }

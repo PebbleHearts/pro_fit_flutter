@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/categories_screen/category_bottom_sheet.dart';
@@ -15,7 +16,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   List<CategoryData> _categories = [];
 
   Future<List<CategoryData>> _loadCategories() async {
-    final database = AppDatabase();
     List<CategoryData> allCategoryItems =
         await database.select(database.category).get();
     return allCategoryItems;
@@ -23,7 +23,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _fetchCategories() async {
     List<CategoryData> allCategoryItems = await _loadCategories();
-    print(allCategoryItems);
     setState(() {
       _categories = allCategoryItems;
     });
@@ -31,8 +30,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _handleCategoryBottomSheetSubmission(String categoryName) async {
     WidgetsFlutterBinding.ensureInitialized();
-    final database = AppDatabase();
-
     await database.into(database.category).insert(
           CategoryCompanion.insert(
             name: categoryName,

@@ -22,7 +22,6 @@ class _ExerciseSelectionBottomSheetState
   List<ExerciseData> _selectedExercises = [];
 
   void _handleExerciseTap(ExerciseData exercise) {
-    print(exercise);
     setState(() {
       _selectedExercises = [exercise];
     });

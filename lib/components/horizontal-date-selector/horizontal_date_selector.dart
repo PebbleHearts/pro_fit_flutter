@@ -63,14 +63,10 @@ class _HorizontalDateSelectorState extends State<HorizontalDateSelector> {
       includeFromDate: true,
     );
 
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       final pixels = _scrollController.position.pixels;
       final maxScrollExtent = _scrollController.position.maxScrollExtent;
       final viewportDimension = _scrollController.position.viewportDimension;
-
-      print('pixels ${pixels}');
-      print('maxScrollExtent ${maxScrollExtent}');
-      print('viewportDimension ${viewportDimension}');
 
       List<DateTime> nextList = getNext30Days(
         fromDate: _datesList[0],
