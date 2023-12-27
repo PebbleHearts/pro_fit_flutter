@@ -37,7 +37,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
         return LogSetRecordBottomSheet(
             currentEditingLogItem: _currentEditingLogItem,
             handleSubmit: (logRecord) {
-              (database.update(database.exerciseLog)..where((t) => t.id.equals(_currentEditingLogItem.workoutLog.id),)).write(
+              (database.update(database.exerciseLog)
+                    ..where(
+                      (t) => t.id.equals(_currentEditingLogItem.workoutLog.id),
+                    ))
+                  .write(
                 ExerciseLogCompanion(
                   workoutRecords: drift.Value(
                     WorkoutRecord(logRecord),
@@ -124,7 +128,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   color: Colors.deepPurple.withOpacity(0.1),
                   child: SingleChildScrollView(
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 47),
+                      padding: const EdgeInsets.only(
+                        bottom: 47,
+                        left: 10,
+                        right: 10
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -151,6 +159,28 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                 ),
                               )
                               .toList(),
+                          // ReorderableListView(
+                          //   shrinkWrap: true,
+                          //   children: [
+                          //     ..._selectedDayWorkoutLog
+                          //         .asMap()
+                          //         .entries
+                          //         .map(
+                          //           (e) => HistoryItem(
+                          //             key: ValueKey(e.value.workoutLog.id),
+                          //             logData: e.value,
+                          //             onEdit: () => _handleEditHistoryItem(
+                          //                 e.value.workoutLog.id),
+                          //             onDelete: () => _handleDeleteHistoryItem(
+                          //                 e.value.workoutLog.id),
+                          //           ),
+                          //         )
+                          //         .toList(),
+                          //   ],
+                          //   onReorder: (lastPosition, newPosition) {
+                          //     print({lastPosition, newPosition});
+                          //   },
+                          // )
                         ],
                       ),
                     ),

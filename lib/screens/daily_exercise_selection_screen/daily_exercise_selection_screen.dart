@@ -95,16 +95,19 @@ class _DailyExerciseSelectionScreenState
   void _handleWorkoutLogBottomSheetSubmission() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await database.into(database.exerciseLog).insert(
-          ExerciseLogCompanion.insert(
-            exerciseId: _selectedExercisesForTheDay[0].id,
-            logDate: widget.selectedDate,
-            description: "some description 2",
-            workoutRecords:
-                WorkoutRecord([WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)], ),
-            order: 4,
-          ),
-        );
+    for (int i = 0; i < _selectedExercisesForTheDay.length; i++) {
+      await database.into(database.exerciseLog).insert(
+            ExerciseLogCompanion.insert(
+              exerciseId: _selectedExercisesForTheDay[i].id,
+              logDate: widget.selectedDate,
+              description: "",
+              workoutRecords: WorkoutRecord(
+                [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
+              ),
+              order: i,
+            ),
+          );
+    }
   }
 
   void _handleRemoveSelectedExercise(String itemId) {
@@ -192,8 +195,8 @@ class _DailyExerciseSelectionScreenState
                         MaterialStatePropertyAll(Colors.deepPurple),
                     overlayColor:
                         MaterialStatePropertyAll(Colors.deepPurpleAccent)),
-                child: const Text('Add'),
                 onPressed: _handleWorkoutLogBottomSheetSubmission,
+                child: const Text('Add'),
               ),
             ),
           )
