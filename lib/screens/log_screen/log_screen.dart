@@ -150,12 +150,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               .asMap()
                               .entries
                               .map(
-                                (e) => HistoryItem(
-                                  logData: e.value,
-                                  onEdit: () => _handleEditHistoryItem(
-                                      e.value.workoutLog.id),
-                                  onDelete: () => _handleDeleteHistoryItem(
-                                      e.value.workoutLog.id),
+                                (e) => Column(
+                                  children: [
+                                    HistoryItem(
+                                      logData: e.value,
+                                      onEdit: () => _handleEditHistoryItem(
+                                          e.value.workoutLog.id),
+                                      onDelete: () => _handleDeleteHistoryItem(
+                                          e.value.workoutLog.id),
+                                    ),
+                                    if (e.key < _selectedDayWorkoutLog.length - 1)
+                                      const SizedBox(height: 10),
+                                  ],
                                 ),
                               )
                               .toList(),
