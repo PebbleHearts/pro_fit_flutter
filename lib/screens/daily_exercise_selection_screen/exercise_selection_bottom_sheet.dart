@@ -5,10 +5,14 @@ import 'package:pro_fit_flutter/database/database.dart';
 
 class ExerciseSelectionBottomSheet extends StatefulWidget {
   final List<ExerciseData> categoryExercises;
+  final List<ExerciseData> selectedExercisesForTheDay;
   final ValueSetter<List<ExerciseData>> onAddClick;
+  final List<ExerciseLogData> currentDayWorkoutLogItems;
   const ExerciseSelectionBottomSheet({
     super.key,
     required this.categoryExercises,
+    required this.selectedExercisesForTheDay,
+    required this.currentDayWorkoutLogItems,
     required this.onAddClick,
   });
 
@@ -22,9 +26,24 @@ class _ExerciseSelectionBottomSheetState
   List<ExerciseData> _selectedExercises = [];
 
   void _handleExerciseTap(ExerciseData exercise) {
-    setState(() {
-      _selectedExercises = [exercise];
-    });
+    final isExistingItem = _selectedExercises.any(
+      (element) => element.id == exercise.id,
+    );
+    if (isExistingItem) {
+      setState(() {
+        _selectedExercises.removeWhere((element) => element.id == exercise.id);
+      });
+    } else {
+      setState(() {
+        _selectedExercises = [..._selectedExercises, exercise];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedExercises =  widget.selectedExercisesForTheDay;
   }
 
   @override
@@ -41,9 +60,12 @@ class _ExerciseSelectionBottomSheetState
               (e) {
                 final isSelected = _selectedExercises
                     .any((element) => element.id == e.value.id);
+                final isDiabled = widget.currentDayWorkoutLogItems
+                    .any((element) => element.exerciseId == e.value.id);
                 return ExerciseCard(
                   name: e.value.name,
                   isSelected: isSelected,
+                  isDisabled: isDiabled,
                   onTap: () => _handleExerciseTap(e.value),
                 );
               },

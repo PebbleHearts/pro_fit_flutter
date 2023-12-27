@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
+import 'package:pro_fit_flutter/database/converters.dart';
+import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_item.dart';
+import 'package:pro_fit_flutter/screens/log_screen/log_set_record_bottom_sheet.dart';
 
 class HistoryScreen extends StatefulWidget {
-  HistoryScreen({super.key});
+  const HistoryScreen({super.key});
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -16,13 +19,47 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   List<ExerciseLogWithExercise> _selectedDayWorkoutLog = [];
   String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
+  late ExerciseLogWithExercise _currentEditingLogItem;
 
-  void _handleDeleteHistoryItem(int index) {
-    print("delete clicked $index");
+  void _handleDeleteHistoryItem(String id) {
+    (database.delete(database.exerciseLog)
+          ..where(
+            (tbl) => tbl.id.equals(id),
+          ))
+        .go();
+    _fetchWorkoutLog();
   }
 
-  void _handleEditHistoryItem(int index) {
-    print("Edit clicked $index");
+  void _showLogSetRecordBottomSheet(BuildContext context) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return LogSetRecordBottomSheet(
+            currentEditingLogItem: _currentEditingLogItem,
+            handleSubmit: (logRecord) {
+              (database.update(database.exerciseLog)..where((t) => t.id.equals(_currentEditingLogItem.workoutLog.id),)).write(
+                ExerciseLogCompanion(
+                  workoutRecords: drift.Value(
+                    WorkoutRecord(logRecord),
+                  ),
+                ),
+              );
+
+              _fetchWorkoutLog();
+            });
+      },
+    );
+  }
+
+  void _handleEditHistoryItem(String id) {
+    ExerciseLogWithExercise currentEditingLogItem =
+        _selectedDayWorkoutLog.firstWhere(
+      (element) => element.workoutLog.id == id,
+    );
+    setState(() {
+      _currentEditingLogItem = currentEditingLogItem;
+    });
+    _showLogSetRecordBottomSheet(context);
   }
 
   Future<List<ExerciseLogWithExercise>> _loadWorkoutLog() async {
@@ -40,9 +77,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _fetchWorkoutLog() async {
-    List<ExerciseLogWithExercise> exerciseLogItems = await _loadWorkoutLog();
+    List<ExerciseLogWithExercise> workoutLogItems = await _loadWorkoutLog();
     setState(() {
-      _selectedDayWorkoutLog = exerciseLogItems;
+      _selectedDayWorkoutLog = workoutLogItems;
     });
   }
 
@@ -76,7 +113,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: const Text('History'),
+        title: const Text('ProFit'),
       ),
       body: Stack(
         children: [
@@ -104,12 +141,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ..._selectedDayWorkoutLog
                               .asMap()
                               .entries
-                              .map((e) => HistoryItem(
-                                    logData: e.value,
-                                    onEdit: () => _handleEditHistoryItem(e.key),
-                                    onDelete: () =>
-                                        _handleDeleteHistoryItem(e.key),
-                                  ))
+                              .map(
+                                (e) => HistoryItem(
+                                  logData: e.value,
+                                  onEdit: () => _handleEditHistoryItem(
+                                      e.value.workoutLog.id),
+                                  onDelete: () => _handleDeleteHistoryItem(
+                                      e.value.workoutLog.id),
+                                ),
+                              )
                               .toList(),
                         ],
                       ),

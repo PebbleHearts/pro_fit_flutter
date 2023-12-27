@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  const CustomTextField({super.key, required this.controller});
+  final TextEditingController? controller;
+  final ValueSetter<String>? onChanged;
+  const CustomTextField({super.key, this.controller, this.onChanged,});
 
   @override
   Widget build(BuildContext context) {
@@ -10,6 +11,7 @@ class CustomTextField extends StatelessWidget {
       height: 50,
       child: TextField(
         controller: controller,
+        onChanged: onChanged,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 15),
           border: const OutlineInputBorder(

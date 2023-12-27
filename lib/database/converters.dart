@@ -7,8 +7,8 @@ part 'converters.g.dart';
 
 @JsonSerializable()
 class WorkoutSet {
-  double? weight;
-  int? repetitions;
+  double weight;
+  int repetitions;
 
   WorkoutSet(this.weight, this.repetitions);
 

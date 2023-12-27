@@ -3,6 +3,7 @@ import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/database/database.dart';
+import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_selected_card.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/exercise_selection_bottom_sheet.dart';
 
 class DailyExerciseSelectionScreen extends StatefulWidget {
@@ -19,6 +20,7 @@ class _DailyExerciseSelectionScreenState
   List<CategoryData> _categories = [];
   List<ExerciseData> _selectedCategoryExercises = [];
   List<ExerciseData> _selectedExercisesForTheDay = [];
+  List<ExerciseLogData> _currentDayWorkoutLogItems = [];
 
   Future<List<CategoryData>> _loadCategories() async {
     List<CategoryData> allCategoryItems =
@@ -43,16 +45,29 @@ class _DailyExerciseSelectionScreenState
   void _handleCategoryCardClick(id, name) async {
     final List<ExerciseData> categoryExerciseItems =
         await _fetchCategoryExercises(id);
+
     setState(() {
       _selectedCategoryExercises = categoryExerciseItems;
     });
     _showCustomBottomSheet(context);
   }
 
+  void _fetchCurrentDayWorkoutLogItems() async {
+    final query = database.select(database.exerciseLog)
+      ..where(
+        (tbl) => tbl.logDate.equals(widget.selectedDate),
+      );
+    final currentDayWorkoutLogItems = await query.map((row) => row).get();
+    setState(() {
+      _currentDayWorkoutLogItems = currentDayWorkoutLogItems;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _fetchCategories();
+    _fetchCurrentDayWorkoutLogItems();
   }
 
   void _showCustomBottomSheet(BuildContext context) async {
@@ -61,6 +76,9 @@ class _DailyExerciseSelectionScreenState
       builder: (BuildContext context) {
         return ExerciseSelectionBottomSheet(
           categoryExercises: _selectedCategoryExercises,
+          // TODO: Shouldn't pass all the selectedExercisesFor the day. Instead we should only pass the exercises belonging to specific category
+          selectedExercisesForTheDay: _selectedExercisesForTheDay,
+          currentDayWorkoutLogItems: _currentDayWorkoutLogItems,
           onAddClick: (value) {
             setState(() {
               _selectedExercisesForTheDay = value;
@@ -83,10 +101,18 @@ class _DailyExerciseSelectionScreenState
             logDate: widget.selectedDate,
             description: "some description 2",
             workoutRecords:
-                WorkoutRecord([WorkoutSet(10, 8), WorkoutSet(10, 12)]),
+                WorkoutRecord([WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)], ),
             order: 4,
           ),
         );
+  }
+
+  void _handleRemoveSelectedExercise(String itemId) {
+    setState(() {
+      _selectedExercisesForTheDay.removeWhere(
+        (element) => element.id == itemId,
+      );
+    });
   }
 
   @override
@@ -129,6 +155,25 @@ class _DailyExerciseSelectionScreenState
                             ),
                           )
                           .toList(),
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        color: Colors.deepPurple.withOpacity(0.2),
+                        child: Column(children: [
+                          const Text(
+                            'Selected Exercises',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                          ..._selectedExercisesForTheDay
+                              .map(
+                                (e) => DailyExerciseSelectionSelectedCard(
+                                  name: e.name,
+                                  onRemove: () =>
+                                      _handleRemoveSelectedExercise(e.id),
+                                ),
+                              )
+                              .toList()
+                        ]),
+                      )
                     ],
                   ),
                 ),
@@ -143,7 +188,8 @@ class _DailyExerciseSelectionScreenState
               child: ElevatedButton(
                 style: const ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Colors.white),
-                    backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
+                    backgroundColor:
+                        MaterialStatePropertyAll(Colors.deepPurple),
                     overlayColor:
                         MaterialStatePropertyAll(Colors.deepPurpleAccent)),
                 child: const Text('Add'),

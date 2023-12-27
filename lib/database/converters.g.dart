@@ -7,8 +7,8 @@ part of 'converters.dart';
 // **************************************************************************
 
 WorkoutSet _$WorkoutSetFromJson(Map<String, dynamic> json) => WorkoutSet(
-      (json['weight'] as num?)?.toDouble(),
-      json['repetitions'] as int?,
+      (json['weight'] as num).toDouble(),
+      json['repetitions'] as int,
     );
 
 Map<String, dynamic> _$WorkoutSetToJson(WorkoutSet instance) =>

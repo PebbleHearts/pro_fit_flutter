@@ -17,6 +17,7 @@ class HistoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       color: Colors.white,
       child: Column(
         children: [

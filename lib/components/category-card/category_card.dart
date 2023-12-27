@@ -14,6 +14,7 @@ class CategoryCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Card(
+        margin: EdgeInsets.zero,
         color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
