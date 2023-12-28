@@ -26,7 +26,7 @@ class DateItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       child: SizedBox(
         width: 50,
-        height: 50,
+        height: 45,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -34,14 +34,15 @@ class DateItem extends StatelessWidget {
             Text(
               formattedDate,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 11,
+                fontWeight: FontWeight.w400,
                 color: isDateSelected ? Colors.black : Colors.grey,
               ),
             ),
             Text(
               formattedDay,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 11,
                 color: isDateSelected ? Colors.black : Colors.grey,
               ),
             ),

@@ -193,17 +193,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                height: 50,
-                child: HorizontalDateSelector(
-                  selectedDate: _selectedDate,
-                  onDateTap: _handleDateSelection,
-                ),
+              HorizontalDateSelector(
+                selectedDate: _selectedDate,
+                onDateTap: _handleDateSelection,
               )
             ],
           ),
           Positioned(
-            bottom: 55.0,
+            bottom: 47.0,
             right: 5.0,
             child: FloatingActionButton.small(
               heroTag: null,

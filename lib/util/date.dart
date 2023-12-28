@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 List<DateTime> getNext30Days(
     {required DateTime fromDate, bool includeFromDate = false}) {
   List<DateTime> next30Days = [];
@@ -18,4 +20,22 @@ List<DateTime> getPrevious30Days(
     previous30Days.add(fromDate.subtract(Duration(days: i)));
   }
   return previous30Days.reversed.toList();
+}
+
+String getHorizontalListDateMonthLabel(DateTime startDate, DateTime endDate) {
+  // String formattedDay = DateFormat('d').format(dateObject);
+  final String year1 = DateFormat('yyyy').format(startDate);
+  final String year2 = DateFormat('yyyy').format(endDate);
+  final String month1 = DateFormat('MMM').format(startDate);
+  final String month2 =DateFormat('MMM').format(endDate);
+
+  print('$year1, $year2, $month1, $month2');
+
+  if (year1 != year2) {
+    return '$year2 $month2 / $year1 $month1';
+  } else if (month1 != month2) {
+    return '$year1 $month2/$month1';
+  } else {
+    return '$year1 $month1';
+  }
 }
