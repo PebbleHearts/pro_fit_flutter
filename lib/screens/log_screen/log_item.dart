@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
-import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/log_screen/record_item.dart';
 
 class HistoryItem extends StatelessWidget {
@@ -27,7 +26,11 @@ class HistoryItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(logData.exercise!.name, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
+                Text(
+                  logData.exercise!.name,
+                  style: const TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.bold),
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -53,7 +56,8 @@ class HistoryItem extends StatelessWidget {
                 (e) => RecordItem(
                     index: e.key,
                     data: e.value,
-                    showDivider: e.key != logData.workoutLog.workoutRecords.sets.length - 1),
+                    showDivider: e.key !=
+                        logData.workoutLog.workoutRecords.sets.length - 1),
               )
         ],
       ),

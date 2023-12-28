@@ -79,7 +79,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         children: [
           Expanded(
             child: Container(
-              color: Colors.deepPurple.withOpacity(0.1),
+              color: purpleTheme.background,
               child: SingleChildScrollView(
                 child: Padding(
                   padding:
