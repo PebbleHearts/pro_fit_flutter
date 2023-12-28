@@ -108,6 +108,7 @@ class _DailyExerciseSelectionScreenState
             ),
           );
     }
+    Navigator.pop(context);
   }
 
   void _handleRemoveSelectedExercise(String itemId) {
@@ -133,7 +134,8 @@ class _DailyExerciseSelectionScreenState
               color: Colors.deepPurple.withOpacity(0.1),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding:
+                      const EdgeInsets.only(bottom: 47, left: 10, right: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -151,32 +153,47 @@ class _DailyExerciseSelectionScreenState
                           .asMap()
                           .entries
                           .map(
-                            (e) => CategoryCard(
-                              name: e.value.name,
-                              onTap: () => _handleCategoryCardClick(
-                                  e.value.id, e.value.name),
+                            (e) => Column(
+                              children: [
+                                CategoryCard(
+                                  name: e.value.name,
+                                  onTap: () => _handleCategoryCardClick(
+                                      e.value.id, e.value.name),
+                                ),
+                                const SizedBox(height: 10),
+                              ],
                             ),
                           )
                           .toList(),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        color: Colors.deepPurple.withOpacity(0.2),
-                        child: Column(children: [
-                          const Text(
-                            'Selected Exercises',
-                            style: TextStyle(fontSize: 18),
+                      if (_selectedExercisesForTheDay.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          color: Colors.deepPurple.withOpacity(0.2),
+                          child: Column(
+                            children: [
+                              const Text(
+                                'Selected Exercises',
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              const SizedBox(height: 10),
+                              ..._selectedExercisesForTheDay
+                                  .map(
+                                    (e) => Column(
+                                      children: [
+                                        DailyExerciseSelectionSelectedCard(
+                                          name: e.name,
+                                          onRemove: () =>
+                                              _handleRemoveSelectedExercise(
+                                                  e.id),
+                                        ),
+                                        const SizedBox(height: 3),
+                                      ],
+                                    ),
+                                  )
+                                  .toList()
+                            ],
                           ),
-                          ..._selectedExercisesForTheDay
-                              .map(
-                                (e) => DailyExerciseSelectionSelectedCard(
-                                  name: e.name,
-                                  onRemove: () =>
-                                      _handleRemoveSelectedExercise(e.id),
-                                ),
-                              )
-                              .toList()
-                        ]),
-                      )
+                        )
                     ],
                   ),
                 ),

@@ -87,15 +87,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
     });
   }
 
-  void _onAddDailyWorkoutClick(ctx) {
-    Navigator.push(
+  void _onAddDailyWorkoutClick(ctx) async {
+    await Navigator.push(
       ctx,
       MaterialPageRoute(
         builder: (context) => DailyExerciseSelectionScreen(
           selectedDate: _selectedDate,
         ),
+        fullscreenDialog: true,
       ),
     );
+    _fetchWorkoutLog();
   }
 
   @override

@@ -18,23 +18,25 @@ class DailyExerciseSelectionSelectedCard extends StatelessWidget {
       margin: const EdgeInsets.all(0),
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               name,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
             SizedBox(
-                width: 25,
-                height: 25,
-                child: IconButton(
-                    onPressed: onRemove,
-                    icon: const Icon(
-                      Icons.close,
-                    ),
-                    padding: EdgeInsets.all(0)))
+              width: 25,
+              height: 25,
+              child: IconButton(
+                onPressed: onRemove,
+                icon: const Icon(
+                  Icons.close,
+                ),
+                padding: const EdgeInsets.all(0),
+              ),
+            )
           ],
         ),
       ),

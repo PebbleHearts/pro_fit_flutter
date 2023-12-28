@@ -74,37 +74,51 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.deepPurple.withOpacity(0.1),
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(
-                height: 200,
-                child: Center(
-                  child: Text(
-                    widget.categoryName,
-                    style: const TextStyle(
-                        fontSize: 25, fontWeight: FontWeight.bold),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.deepPurple.withOpacity(0.1),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 47, left: 10, right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            widget.categoryName,
+                            style: const TextStyle(
+                                fontSize: 25, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      ..._exercises
+                          .asMap()
+                          .entries
+                          .map(
+                            (e) => Column(
+                              children: [
+                                ExerciseCard(
+                                  name: e.value.name,
+                                  onTap: () => _handleExerciseCardClick(
+                                      e.value.id, e.value.name),
+                                ),
+                                const SizedBox(height: 10,),
+                              ],
+                            ),
+                          )
+                          .toList(),
+                    ],
                   ),
                 ),
               ),
-              ..._exercises
-                  .asMap()
-                  .entries
-                  .map(
-                    (e) => ExerciseCard(
-                      name: e.value.name,
-                      onTap: () =>
-                          _handleExerciseCardClick(e.value.id, e.value.name),
-                    ),
-                  )
-                  .toList(),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.small(
           heroTag: null,

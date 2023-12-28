@@ -55,21 +55,28 @@ class _ExerciseSelectionBottomSheetState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('something'),
+            const Text('Select Exercise', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+            const SizedBox(height: 10),
             ...widget.categoryExercises.asMap().entries.map(
               (e) {
                 final isSelected = _selectedExercises
                     .any((element) => element.id == e.value.id);
-                final isDiabled = widget.currentDayWorkoutLogItems
+                final isDisabled = widget.currentDayWorkoutLogItems
                     .any((element) => element.exerciseId == e.value.id);
-                return ExerciseCard(
-                  name: e.value.name,
-                  isSelected: isSelected,
-                  isDisabled: isDiabled,
-                  onTap: () => _handleExerciseTap(e.value),
+                return Column(
+                  children: [
+                    ExerciseCard(
+                      name: e.value.name,
+                      isSelected: isSelected,
+                      isDisabled: isDisabled,
+                      onTap: () => _handleExerciseTap(e.value),
+                    ),
+                    const SizedBox(height: 5),
+                  ],
                 );
               },
             ).toList(),
+            const SizedBox(height: 10),
             SizedBox(
               height: 40,
               child: ElevatedButton(

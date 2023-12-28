@@ -72,7 +72,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurple,
         foregroundColor: Colors.white,
-        title: const Text('Categories'),
+        title: const Text('ProFit'),
       ),
       body: Column(
         children: [
@@ -81,7 +81,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               color: Colors.deepPurple.withOpacity(0.1),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
+                  padding:
+                      const EdgeInsets.only(bottom: 47, left: 10, right: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -98,10 +99,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       ..._categories
                           .asMap()
                           .entries
-                          .map((e) => CategoryCard(
-                              name: e.value.name,
-                              onTap: () => _handleCategoryCardClick(
-                                  e.value.id, e.value.name)))
+                          .map((e) => Column(
+                                children: [
+                                  CategoryCard(
+                                    name: e.value.name,
+                                    onTap: () => _handleCategoryCardClick(
+                                        e.value.id, e.value.name),
+                                  ),
+                                  const SizedBox(height: 10)
+                                ],
+                              ))
                           .toList(),
                     ],
                   ),
