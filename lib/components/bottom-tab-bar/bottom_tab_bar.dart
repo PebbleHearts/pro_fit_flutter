@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/components/bottom-tab-bar/bottom_tab_item.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 
 class BottomTabBar extends StatelessWidget {
   final int currentIndex;
@@ -20,16 +22,21 @@ class BottomTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 50,
-      color: Colors.deepPurple,
+      color: purpleTheme.primary,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _tabIcons.asMap().entries.map((entry) =>   IconButton(
-            icon: Icon(entry.value),
-            onPressed: () {
-              handleIndexChange(entry.key);
-            },
-            color: currentIndex == entry.key ? Colors.white : Colors.grey,
-          ),).toList(),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: _tabIcons
+            .asMap()
+            .entries
+            .map(
+              (entry) => BottomTabItem(
+                icon: entry.value,
+                isSelected: currentIndex == entry.key,
+                onPress: () => handleIndexChange(entry.key),
+              ),
+            )
+            .toList(),
       ),
     );
   }

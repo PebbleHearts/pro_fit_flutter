@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/categories_screen/category_bottom_sheet.dart';
 import 'package:pro_fit_flutter/screens/exercises_screen/exercises_screen.dart';
@@ -70,7 +71,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: purpleTheme.primary,
         foregroundColor: Colors.white,
         title: const Text('ProFit'),
       ),
@@ -92,7 +93,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           child: Text(
                             'Categories',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
+                                fontSize: 25, fontWeight: FontWeight.bold,),
                           ),
                         ),
                       ),
@@ -106,7 +107,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     onTap: () => _handleCategoryCardClick(
                                         e.value.id, e.value.name),
                                   ),
-                                  const SizedBox(height: 10)
+                                  const SizedBox(height: 7)
                                 ],
                               ))
                           .toList(),
@@ -120,6 +121,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
       floatingActionButton: FloatingActionButton.small(
           heroTag: null,
+          backgroundColor: purpleTheme.primary,
+          foregroundColor: Colors.white,
           child: const Icon(Icons.add),
           onPressed: () {
             _showCustomBottomSheet(context);

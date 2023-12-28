@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/components/bottom-sheet/BottomSheet.dart';
+import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
-import 'package:pro_fit_flutter/components/bottom-sheet/BottomSheet.dart';
+import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_record_row.dart';
 
@@ -73,7 +73,7 @@ class _LogSetRecordBottomSheetState extends State<LogSetRecordBottomSheet> {
                 backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
                 overlayColor: MaterialStatePropertyAll(Colors.deepPurpleAccent),
               ),
-              child: const Text('Create'),
+              child: const Text('Save'),
               onPressed: () {
                 widget.handleSubmit(_currentWorkoutRecord);
                 Navigator.pop(context);

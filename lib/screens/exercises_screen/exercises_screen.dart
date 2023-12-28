@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/exercises_screen/exercise_bottom_sheet.dart';
 
@@ -71,7 +72,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: purpleTheme.primary,
         foregroundColor: Colors.white,
       ),
       body: Column(
@@ -92,7 +93,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                           child: Text(
                             widget.categoryName,
                             style: const TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -107,7 +110,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                   onTap: () => _handleExerciseCardClick(
                                       e.value.id, e.value.name),
                                 ),
-                                const SizedBox(height: 10,),
+                                const SizedBox(
+                                  height: 7,
+                                ),
                               ],
                             ),
                           )
@@ -122,6 +127,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       ),
       floatingActionButton: FloatingActionButton.small(
           heroTag: null,
+          backgroundColor: purpleTheme.primary,
+          foregroundColor: Colors.white,
           child: const Icon(Icons.add),
           onPressed: () {
             _showCustomBottomSheet(context);

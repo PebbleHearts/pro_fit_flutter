@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/components/bottom-sheet/BottomSheet.dart';
+import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/custom-text-field/custom_text_field.dart';
 
 class CategoryBottomSheet extends StatefulWidget {

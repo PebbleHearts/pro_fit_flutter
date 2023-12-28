@@ -19,6 +19,7 @@ class HistoryItem extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       color: Colors.white,
+      elevation: 2,
       child: Column(
         children: [
           Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_selected_card.dart';
@@ -123,7 +124,7 @@ class _DailyExerciseSelectionScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: purpleTheme.primary,
         foregroundColor: Colors.white,
       ),
       body: Column(
