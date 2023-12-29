@@ -21,6 +21,7 @@ class ExercisesScreen extends StatefulWidget {
 
 class _ExercisesScreenState extends State<ExercisesScreen> {
   List<ExerciseData> _exercises = [];
+  ExerciseData? _editingExercise;
 
   Future<List<ExerciseData>> _loadExercises() async {
     final query = database.select(database.exercise)
@@ -41,12 +42,28 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void _handleExerciseBottomSheetSubmission(String exerciseName) async {
     WidgetsFlutterBinding.ensureInitialized();
-    await database.into(database.exercise).insert(
-          ExerciseCompanion.insert(
-            name: exerciseName,
-            categoryId: widget.categoryId,
-          ),
-        );
+
+    if (_editingExercise != null) {
+      (database.update(database.exercise)
+            ..where(
+              (t) => t.id.equals(_editingExercise!.id),
+            ))
+          .write(
+        ExerciseCompanion(
+          name: drift.Value(exerciseName),
+        ),
+      );
+      setState(() {
+        _editingExercise = null;
+      });
+    } else {
+      await database.into(database.exercise).insert(
+            ExerciseCompanion.insert(
+              name: exerciseName,
+              categoryId: widget.categoryId,
+            ),
+          );
+    }
 
     _fetchExercises();
   }
@@ -56,6 +73,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       context: context,
       builder: (BuildContext context) {
         return ExerciseBottomSheet(
+          editingExercise: _editingExercise,
+          isEditing: _editingExercise != null,
           handleSubmit: _handleExerciseBottomSheetSubmission,
         );
       },
@@ -76,6 +95,15 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     );
 
     _fetchExercises();
+  }
+
+  void _handleExerciseItemEditClick(String exerciseId) {
+    ExerciseData item =
+        _exercises.firstWhere((element) => element.id == exerciseId);
+    setState(() {
+      _editingExercise = item;
+    });
+    _showCustomBottomSheet(context);
   }
 
   @override
@@ -128,6 +156,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                                       e.value.id, e.value.name),
                                   onDelete: () =>
                                       _handleExerciseItemDelete(e.value.id),
+                                  onEdit: () =>
+                                      _handleExerciseItemEditClick(e.value.id),
                                 ),
                                 const SizedBox(
                                   height: 7,

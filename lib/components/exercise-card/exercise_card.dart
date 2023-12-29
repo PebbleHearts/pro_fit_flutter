@@ -7,6 +7,7 @@ class ExerciseCard extends StatelessWidget {
   final bool displayCta;
   final VoidCallback onTap;
   final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
   const ExerciseCard({
     super.key,
     required this.name,
@@ -14,6 +15,7 @@ class ExerciseCard extends StatelessWidget {
     this.isDisabled = false,
     required this.displayCta,
     required this.onTap,
+    this.onEdit,
     this.onDelete,
   });
 
@@ -49,7 +51,9 @@ class ExerciseCard extends StatelessWidget {
                       height: 32,
                       width: 32,
                       child: IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          onEdit!();
+                        },
                         icon: const Icon(
                           Icons.edit,
                           size: 17,

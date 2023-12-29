@@ -44,6 +44,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           name: drift.Value(categoryName),
         ),
       );
+      setState(() {
+        _editingCategory = null;
+      });
     } else {
       await database.into(database.category).insert(
             CategoryCompanion.insert(

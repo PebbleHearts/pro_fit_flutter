@@ -53,7 +53,7 @@ class _CategoryBottomSheetState extends State<CategoryBottomSheet> {
                         MaterialStatePropertyAll(purpleTheme.primary),
                     overlayColor: MaterialStatePropertyAll(
                         purpleTheme.primary.withOpacity(0.5))),
-                child: const Text('Create'),
+                child: Text(widget.isEditing ? 'Save' : 'Create'),
                 onPressed: () {
                   widget.handleSubmit(_nameController.text);
                   Navigator.pop(context);
