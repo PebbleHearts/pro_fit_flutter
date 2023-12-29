@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 
 class BottomTabItem extends StatelessWidget {
-  final IconData icon;
+  final CustomBottomTabItem tabItem;
   final bool isSelected;
   final VoidCallback onPress;
   const BottomTabItem({
     super.key,
-    required this.icon,
+    required this.tabItem,
     required this.isSelected,
     required this.onPress,
   });
@@ -21,9 +22,22 @@ class BottomTabItem extends StatelessWidget {
           onTap: onPress,
           highlightColor: purpleTheme.primary.withOpacity(0.5),
           splashColor: Colors.white.withOpacity(0.5),
-          child: Icon(
-            icon,
-            color: isSelected ? Colors.white : Colors.grey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                tabItem.icon,
+                color: isSelected ? Colors.white : Colors.grey,
+                size: 22,
+              ),
+              Text(
+                tabItem.label,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.grey,
+                  fontSize: 11,
+                ),
+              ),
+            ],
           ),
         ),
       ),

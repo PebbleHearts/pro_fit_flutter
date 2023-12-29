@@ -4,13 +4,18 @@ class ExerciseCard extends StatelessWidget {
   final String name;
   final bool isSelected;
   final bool isDisabled;
+  final bool displayCta;
   final VoidCallback onTap;
-  const ExerciseCard(
-      {super.key,
-      required this.name,
-      this.isSelected = false,
-      this.isDisabled = false,
-      required this.onTap});
+  final VoidCallback? onDelete;
+  const ExerciseCard({
+    super.key,
+    required this.name,
+    this.isSelected = false,
+    this.isDisabled = false,
+    required this.displayCta,
+    required this.onTap,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,7 @@ class ExerciseCard extends StatelessWidget {
                   : Colors.white,
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
+          padding: const EdgeInsets.only(left: 15, top: 6, bottom: 6, right: 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -36,7 +41,36 @@ class ExerciseCard extends StatelessWidget {
                 name,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-              )
+              ),
+              if (displayCta)
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 32,
+                      width: 32,
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.edit,
+                          size: 17,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 32,
+                      width: 32,
+                      child: IconButton(
+                        onPressed: () {
+                          onDelete!();
+                        },
+                        icon: const Icon(
+                          Icons.delete,
+                          size: 17,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

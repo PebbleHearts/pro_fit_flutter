@@ -16,6 +16,7 @@ final _uuid = Uuid();
 class Category extends Table {
   TextColumn get id => text().clientDefault(() => _uuid.v4())();
   TextColumn get name => text()();
+  TextColumn get status => text().withDefault(const Constant('created'))();
 }
 
 class Exercise extends Table {
@@ -23,6 +24,7 @@ class Exercise extends Table {
   TextColumn get name => text()();
   // TODO: Add a reference constraint for the category field
   TextColumn get categoryId => text()();
+  TextColumn get status => text().withDefault(const Constant('created'))();
 }
 
 class ExerciseLog extends Table {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/custom-text-field/custom_text_field.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 
 class ExerciseBottomSheet extends StatefulWidget {
   final ValueSetter<String> handleSubmit;
@@ -29,11 +30,13 @@ class _ExerciseBottomSheetState extends State<ExerciseBottomSheet> {
             SizedBox(
               height: 40,
               child: ElevatedButton(
-                style: const ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
-                    backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
-                    overlayColor:
-                        MaterialStatePropertyAll(Colors.deepPurpleAccent)),
+                style: ButtonStyle(
+                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                  backgroundColor:
+                      MaterialStatePropertyAll(purpleTheme.primary),
+                  overlayColor: MaterialStatePropertyAll(
+                      purpleTheme.primary.withOpacity(0.5)),
+                ),
                 child: const Text('Create'),
                 onPressed: () {
                   widget.handleSubmit(_nameController.text);

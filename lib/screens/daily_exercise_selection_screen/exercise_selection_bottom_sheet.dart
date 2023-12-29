@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 
 class ExerciseSelectionBottomSheet extends StatefulWidget {
@@ -69,6 +70,7 @@ class _ExerciseSelectionBottomSheetState
                       name: e.value.name,
                       isSelected: isSelected,
                       isDisabled: isDisabled,
+                      displayCta: false,
                       onTap: () => _handleExerciseTap(e.value),
                     ),
                     const SizedBox(height: 5),
@@ -80,12 +82,13 @@ class _ExerciseSelectionBottomSheetState
             SizedBox(
               height: 40,
               child: ElevatedButton(
-                style: const ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                style: ButtonStyle(
+                    foregroundColor: const MaterialStatePropertyAll(Colors.white),
                     backgroundColor:
-                        MaterialStatePropertyAll(Colors.deepPurple),
+                        MaterialStatePropertyAll(purpleTheme.primary),
+                    // TODO: Change the overlay color for this
                     overlayColor:
-                        MaterialStatePropertyAll(Colors.deepPurpleAccent)),
+                        MaterialStatePropertyAll(purpleTheme.primary.withOpacity(0.5))),
                 child: const Text('Add'),
                 onPressed: () {
                   widget.onAddClick(_selectedExercises);

@@ -160,6 +160,7 @@ class _DailyExerciseSelectionScreenState
                                   name: e.value.name,
                                   onTap: () => _handleCategoryCardClick(
                                       e.value.id, e.value.name),
+                                  displayCta: false,
                                 ),
                                 const SizedBox(height: 7),
                               ],
@@ -210,12 +211,12 @@ class _DailyExerciseSelectionScreenState
             child: SizedBox(
               height: 40,
               child: ElevatedButton(
-                style: const ButtonStyle(
-                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                style: ButtonStyle(
+                    foregroundColor: const MaterialStatePropertyAll(Colors.white),
                     backgroundColor:
-                        MaterialStatePropertyAll(Colors.deepPurple),
+                        MaterialStatePropertyAll(purpleTheme.primary),
                     overlayColor:
-                        MaterialStatePropertyAll(Colors.deepPurpleAccent)),
+                        MaterialStatePropertyAll(purpleTheme.primary.withOpacity(0.5))),
                 onPressed: _handleWorkoutLogBottomSheetSubmission,
                 child: const Text('Add'),
               ),

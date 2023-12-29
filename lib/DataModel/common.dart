@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 
 final database = AppDatabase();
@@ -16,10 +17,19 @@ class HistoryItemDataModel {
   HistoryItemDataModel(this.name, this.records);
 }
 
-
 class ExerciseLogWithExercise {
   ExerciseLogWithExercise(this.workoutLog, this.exercise);
 
   final ExerciseLogData workoutLog;
   final ExerciseData? exercise;
+}
+
+class CustomBottomTabItem {
+  IconData icon;
+  String label;
+
+  CustomBottomTabItem({
+    required this.icon,
+    required this.label,
+  });
 }

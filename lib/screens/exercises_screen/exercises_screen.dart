@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
@@ -25,7 +26,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     final query = database.select(database.exercise)
       ..where(
         (tbl) => tbl.categoryId.equals(widget.categoryId),
-      );
+      )
+      ..where((tbl) => tbl.status.equals("created"));
     final exerciseItems = query.map((row) => row).get();
     return exerciseItems;
   }
@@ -61,6 +63,20 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   }
 
   void _handleExerciseCardClick(String categoryId, String name) {}
+
+  void _handleExerciseItemDelete(String exerciseId) {
+    (database.update(database.exercise)
+          ..where(
+            (t) => t.id.equals(exerciseId),
+          ))
+        .write(
+      const ExerciseCompanion(
+        status: drift.Value("deleted"),
+      ),
+    );
+
+    _fetchExercises();
+  }
 
   @override
   void initState() {
@@ -107,8 +123,11 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                               children: [
                                 ExerciseCard(
                                   name: e.value.name,
+                                  displayCta: true,
                                   onTap: () => _handleExerciseCardClick(
                                       e.value.id, e.value.name),
+                                  onDelete: () =>
+                                      _handleExerciseItemDelete(e.value.id),
                                 ),
                                 const SizedBox(
                                   height: 7,

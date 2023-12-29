@@ -35,31 +35,34 @@ class LogItem extends StatelessWidget {
                   style: const TextStyle(
                       fontSize: 17, fontWeight: FontWeight.bold),
                 ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 35,
-                      width: 35,
-                      child: IconButton(
-                          onPressed: onEdit,
+                Padding(
+                  padding: const EdgeInsets.only(right: 6.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 35,
+                        width: 35,
+                        child: IconButton(
+                            onPressed: onEdit,
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 20,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 35,
+                        width: 35,
+                        child: IconButton(
+                          onPressed: onDelete,
                           icon: const Icon(
-                            Icons.edit,
+                            Icons.delete,
                             size: 20,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 35,
-                      width: 35,
-                      child: IconButton(
-                        onPressed: onDelete,
-                        icon: const Icon(
-                          Icons.delete,
-                          size: 20,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -116,40 +116,48 @@ class _HorizontalDateSelectorState extends State<HorizontalDateSelector> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              splashColor: Colors.deepPurple.withOpacity(0.2),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                child: Text(
-                  _yearMonthLabel,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(top: BorderSide(width: 1, color: Colors.grey.withOpacity(0.2))),
+        color: Colors.white,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              InkWell(
+                splashColor: Colors.deepPurple.withOpacity(0.2),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  child: Text(
+                    _yearMonthLabel,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 45,
-          child: ListView.builder(
-            reverse: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: _datesList.length,
-            controller: _scrollController,
-            itemBuilder: (context, index) {
-              return DateItem(
-                dateObject: _datesList[index],
-                selectedDate: widget.selectedDate,
-                onDateTap: widget.onDateTap,
-              );
-            },
+            ],
           ),
-        ),
-      ],
+          SizedBox(
+            height: 45,
+            child: ListView.builder(
+              reverse: true,
+              scrollDirection: Axis.horizontal,
+              itemCount: _datesList.length,
+              controller: _scrollController,
+              itemBuilder: (context, index) {
+                return DateItem(
+                  dateObject: _datesList[index],
+                  selectedDate: widget.selectedDate,
+                  onDateTap: widget.onDateTap,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

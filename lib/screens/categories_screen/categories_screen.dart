@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
@@ -17,8 +18,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   List<CategoryData> _categories = [];
 
   Future<List<CategoryData>> _loadCategories() async {
-    List<CategoryData> allCategoryItems =
-        await database.select(database.category).get();
+    final query = database.select(database.category)..where((tbl) => tbl.status.equals('created'));
+    List<CategoryData> allCategoryItems = await query.map((row) => row).get();
     return allCategoryItems;
   }
 
@@ -59,6 +60,20 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ExercisesScreen(categoryId: categoryId, categoryName: name),
       ),
     );
+  }
+
+  void _handleCategoryItemDelete(String categoryId) {
+    (database.update(database.category)
+                    ..where(
+                      (t) => t.id.equals(categoryId),
+                    ))
+                  .write(
+                const CategoryCompanion(
+                    status: drift.Value("deleted"),
+                  ),
+                );
+
+              _fetchCategories();
   }
 
   @override
@@ -106,6 +121,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     name: e.value.name,
                                     onTap: () => _handleCategoryCardClick(
                                         e.value.id, e.value.name),
+                                    onDelete: () => _handleCategoryItemDelete(e.value.id),
+                                    displayCta: true,
                                   ),
                                   const SizedBox(height: 7)
                                 ],

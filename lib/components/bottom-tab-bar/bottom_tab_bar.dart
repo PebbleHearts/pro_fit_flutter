@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/bottom-tab-bar/bottom_tab_item.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 
@@ -11,11 +12,11 @@ class BottomTabBar extends StatelessWidget {
     required this.handleIndexChange,
   });
 
-  final _tabIcons = [
-    Icons.history,
-    Icons.category,
-    Icons.group_work,
-    Icons.settings
+  final _tabs = [
+    CustomBottomTabItem(icon: Icons.history, label: 'Log'),
+    CustomBottomTabItem(icon: Icons.category, label: 'Categories'),
+    CustomBottomTabItem(icon: Icons.group_work, label: 'Routines'),
+    CustomBottomTabItem(icon: Icons.settings, label: 'Settings')
   ];
 
   @override
@@ -26,12 +27,12 @@ class BottomTabBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _tabIcons
+        children: _tabs
             .asMap()
             .entries
             .map(
               (entry) => BottomTabItem(
-                icon: entry.value,
+                tabItem: entry.value,
                 isSelected: currentIndex == entry.key,
                 onPress: () => handleIndexChange(entry.key),
               ),

@@ -21,8 +21,15 @@ class $CategoryTable extends Category
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
       'name', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  List<GeneratedColumn> get $columns => [id, name];
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('created'));
+  @override
+  List<GeneratedColumn> get $columns => [id, name, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -42,6 +49,10 @@ class $CategoryTable extends Category
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
     return context;
   }
 
@@ -55,6 +66,8 @@ class $CategoryTable extends Category
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
     );
   }
 
@@ -67,12 +80,15 @@ class $CategoryTable extends Category
 class CategoryData extends DataClass implements Insertable<CategoryData> {
   final String id;
   final String name;
-  const CategoryData({required this.id, required this.name});
+  final String status;
+  const CategoryData(
+      {required this.id, required this.name, required this.status});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
+    map['status'] = Variable<String>(status);
     return map;
   }
 
@@ -80,6 +96,7 @@ class CategoryData extends DataClass implements Insertable<CategoryData> {
     return CategoryCompanion(
       id: Value(id),
       name: Value(name),
+      status: Value(status),
     );
   }
 
@@ -89,6 +106,7 @@ class CategoryData extends DataClass implements Insertable<CategoryData> {
     return CategoryData(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
+      status: serializer.fromJson<String>(json['status']),
     );
   }
   @override
@@ -97,61 +115,77 @@ class CategoryData extends DataClass implements Insertable<CategoryData> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
+      'status': serializer.toJson<String>(status),
     };
   }
 
-  CategoryData copyWith({String? id, String? name}) => CategoryData(
+  CategoryData copyWith({String? id, String? name, String? status}) =>
+      CategoryData(
         id: id ?? this.id,
         name: name ?? this.name,
+        status: status ?? this.status,
       );
   @override
   String toString() {
     return (StringBuffer('CategoryData(')
           ..write('id: $id, ')
-          ..write('name: $name')
+          ..write('name: $name, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name);
+  int get hashCode => Object.hash(id, name, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CategoryData && other.id == this.id && other.name == this.name);
+      (other is CategoryData &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.status == this.status);
 }
 
 class CategoryCompanion extends UpdateCompanion<CategoryData> {
   final Value<String> id;
   final Value<String> name;
+  final Value<String> status;
   final Value<int> rowid;
   const CategoryCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CategoryCompanion.insert({
     this.id = const Value.absent(),
     required String name,
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : name = Value(name);
   static Insertable<CategoryData> custom({
     Expression<String>? id,
     Expression<String>? name,
+    Expression<String>? status,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
+      if (status != null) 'status': status,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   CategoryCompanion copyWith(
-      {Value<String>? id, Value<String>? name, Value<int>? rowid}) {
+      {Value<String>? id,
+      Value<String>? name,
+      Value<String>? status,
+      Value<int>? rowid}) {
     return CategoryCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
+      status: status ?? this.status,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -165,6 +199,9 @@ class CategoryCompanion extends UpdateCompanion<CategoryData> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -176,6 +213,7 @@ class CategoryCompanion extends UpdateCompanion<CategoryData> {
     return (StringBuffer('CategoryCompanion(')
           ..write('id: $id, ')
           ..write('name: $name, ')
+          ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -206,8 +244,15 @@ class $ExerciseTable extends Exercise
   late final GeneratedColumn<String> categoryId = GeneratedColumn<String>(
       'category_id', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  List<GeneratedColumn> get $columns => [id, name, categoryId];
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultValue: const Constant('created'));
+  @override
+  List<GeneratedColumn> get $columns => [id, name, categoryId, status];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -235,6 +280,10 @@ class $ExerciseTable extends Exercise
     } else if (isInserting) {
       context.missing(_categoryIdMeta);
     }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
     return context;
   }
 
@@ -250,6 +299,8 @@ class $ExerciseTable extends Exercise
           .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
       categoryId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}category_id'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
     );
   }
 
@@ -263,14 +314,19 @@ class ExerciseData extends DataClass implements Insertable<ExerciseData> {
   final String id;
   final String name;
   final String categoryId;
+  final String status;
   const ExerciseData(
-      {required this.id, required this.name, required this.categoryId});
+      {required this.id,
+      required this.name,
+      required this.categoryId,
+      required this.status});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['name'] = Variable<String>(name);
     map['category_id'] = Variable<String>(categoryId);
+    map['status'] = Variable<String>(status);
     return map;
   }
 
@@ -279,6 +335,7 @@ class ExerciseData extends DataClass implements Insertable<ExerciseData> {
       id: Value(id),
       name: Value(name),
       categoryId: Value(categoryId),
+      status: Value(status),
     );
   }
 
@@ -289,6 +346,7 @@ class ExerciseData extends DataClass implements Insertable<ExerciseData> {
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       categoryId: serializer.fromJson<String>(json['categoryId']),
+      status: serializer.fromJson<String>(json['status']),
     );
   }
   @override
@@ -298,51 +356,59 @@ class ExerciseData extends DataClass implements Insertable<ExerciseData> {
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
       'categoryId': serializer.toJson<String>(categoryId),
+      'status': serializer.toJson<String>(status),
     };
   }
 
-  ExerciseData copyWith({String? id, String? name, String? categoryId}) =>
+  ExerciseData copyWith(
+          {String? id, String? name, String? categoryId, String? status}) =>
       ExerciseData(
         id: id ?? this.id,
         name: name ?? this.name,
         categoryId: categoryId ?? this.categoryId,
+        status: status ?? this.status,
       );
   @override
   String toString() {
     return (StringBuffer('ExerciseData(')
           ..write('id: $id, ')
           ..write('name: $name, ')
-          ..write('categoryId: $categoryId')
+          ..write('categoryId: $categoryId, ')
+          ..write('status: $status')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, name, categoryId);
+  int get hashCode => Object.hash(id, name, categoryId, status);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ExerciseData &&
           other.id == this.id &&
           other.name == this.name &&
-          other.categoryId == this.categoryId);
+          other.categoryId == this.categoryId &&
+          other.status == this.status);
 }
 
 class ExerciseCompanion extends UpdateCompanion<ExerciseData> {
   final Value<String> id;
   final Value<String> name;
   final Value<String> categoryId;
+  final Value<String> status;
   final Value<int> rowid;
   const ExerciseCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ExerciseCompanion.insert({
     this.id = const Value.absent(),
     required String name,
     required String categoryId,
+    this.status = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : name = Value(name),
         categoryId = Value(categoryId);
@@ -350,12 +416,14 @@ class ExerciseCompanion extends UpdateCompanion<ExerciseData> {
     Expression<String>? id,
     Expression<String>? name,
     Expression<String>? categoryId,
+    Expression<String>? status,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (categoryId != null) 'category_id': categoryId,
+      if (status != null) 'status': status,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -364,11 +432,13 @@ class ExerciseCompanion extends UpdateCompanion<ExerciseData> {
       {Value<String>? id,
       Value<String>? name,
       Value<String>? categoryId,
+      Value<String>? status,
       Value<int>? rowid}) {
     return ExerciseCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       categoryId: categoryId ?? this.categoryId,
+      status: status ?? this.status,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -385,6 +455,9 @@ class ExerciseCompanion extends UpdateCompanion<ExerciseData> {
     if (categoryId.present) {
       map['category_id'] = Variable<String>(categoryId.value);
     }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -397,6 +470,7 @@ class ExerciseCompanion extends UpdateCompanion<ExerciseData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('categoryId: $categoryId, ')
+          ..write('status: $status, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

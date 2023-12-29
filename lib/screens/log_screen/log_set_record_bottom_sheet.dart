@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_record_row.dart';
 
@@ -68,10 +69,11 @@ class _LogSetRecordBottomSheetState extends State<LogSetRecordBottomSheet> {
             }).toList(),
             const SizedBox(height: 15),
             ElevatedButton(
-              style: const ButtonStyle(
-                foregroundColor: MaterialStatePropertyAll(Colors.white),
-                backgroundColor: MaterialStatePropertyAll(Colors.deepPurple),
-                overlayColor: MaterialStatePropertyAll(Colors.deepPurpleAccent),
+              style: ButtonStyle(
+                foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                backgroundColor: MaterialStatePropertyAll(purpleTheme.primary),
+                overlayColor: MaterialStatePropertyAll(
+                    purpleTheme.primary.withOpacity(0.5)),
               ),
               child: const Text('Save'),
               onPressed: () {
