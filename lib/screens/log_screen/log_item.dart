@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/screens/log_screen/record_item.dart';
 
-class HistoryItem extends StatelessWidget {
+class LogItem extends StatelessWidget {
   final ExerciseLogWithExercise logData;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  const HistoryItem({
+  const LogItem({
     super.key,
     required this.logData,
     required this.onEdit,

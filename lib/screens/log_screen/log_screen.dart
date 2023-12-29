@@ -154,7 +154,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               .map(
                                 (e) => Column(
                                   children: [
-                                    HistoryItem(
+                                    LogItem(
                                       logData: e.value,
                                       onEdit: () => _handleEditHistoryItem(
                                           e.value.workoutLog.id),
