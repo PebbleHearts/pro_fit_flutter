@@ -21,6 +21,7 @@ class ExerciseCard extends StatelessWidget {
       onTap: isDisabled? () {} : onTap,
       child: Card(
         margin: EdgeInsets.zero,
+        elevation: 2,
         color: isSelected ? Colors.deepPurple.withOpacity(0.4) : isDisabled ? Colors.blueGrey : Colors.white,
         child: Padding(
           padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),

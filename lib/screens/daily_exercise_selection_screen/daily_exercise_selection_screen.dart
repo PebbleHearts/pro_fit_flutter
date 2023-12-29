@@ -203,7 +203,7 @@ class _DailyExerciseSelectionScreenState
           ),
           Container(
             padding: const EdgeInsets.all(10),
-            color: Colors.deepPurple.withOpacity(0.1),
+            color: purpleTheme.background,
             child: SizedBox(
               height: 40,
               child: ElevatedButton(

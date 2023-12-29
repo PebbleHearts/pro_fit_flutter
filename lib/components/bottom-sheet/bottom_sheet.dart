@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/constants/theme.dart';
 
 class CustomBottomSheet extends StatelessWidget {
   final Widget bottomSheetContent;
@@ -9,9 +10,9 @@ class CustomBottomSheet extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 10),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration:  BoxDecoration(
+        color: purpleTheme.background,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
         ),
