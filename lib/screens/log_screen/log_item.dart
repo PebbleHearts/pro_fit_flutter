@@ -20,6 +20,7 @@ class HistoryItem extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
+        border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
       ),
       child: Column(
         children: [
@@ -27,6 +28,7 @@ class HistoryItem extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   logData.exercise!.name,
@@ -36,17 +38,25 @@ class HistoryItem extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                        onPressed: onEdit,
+                    SizedBox(
+                      height: 35,
+                      width: 35,
+                      child: IconButton(
+                          onPressed: onEdit,
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 20,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 35,
+                      width: 35,
+                      child: IconButton(
+                        onPressed: onDelete,
                         icon: const Icon(
-                          Icons.edit,
+                          Icons.delete,
                           size: 20,
-                        )),
-                    IconButton(
-                      onPressed: onDelete,
-                      icon: const Icon(
-                        Icons.delete,
-                        size: 20,
+                        ),
                       ),
                     ),
                   ],

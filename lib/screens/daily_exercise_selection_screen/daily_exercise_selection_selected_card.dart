@@ -11,12 +11,16 @@ class DailyExerciseSelectionSelectedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      shape: RoundedRectangleBorder(
+    return Container(
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(80),
+      // ),
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(80),
+        color: Colors.white,
+        border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
       ),
       margin: const EdgeInsets.all(0),
-      color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
         child: Row(
@@ -24,7 +28,7 @@ class DailyExerciseSelectionSelectedCard extends StatelessWidget {
           children: [
             Text(
               name,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
             ),
             SizedBox(
               width: 25,
@@ -33,6 +37,7 @@ class DailyExerciseSelectionSelectedCard extends StatelessWidget {
                 onPressed: onRemove,
                 icon: const Icon(
                   Icons.close,
+                  size: 20,
                 ),
                 padding: const EdgeInsets.all(0),
               ),

@@ -20,6 +20,7 @@ class ExerciseCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
           color: isSelected
               ? Colors.deepPurple.withOpacity(0.1)
               : isDisabled

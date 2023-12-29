@@ -161,7 +161,7 @@ class _DailyExerciseSelectionScreenState
                                   onTap: () => _handleCategoryCardClick(
                                       e.value.id, e.value.name),
                                 ),
-                                const SizedBox(height: 10),
+                                const SizedBox(height: 7),
                               ],
                             ),
                           )
@@ -169,12 +169,15 @@ class _DailyExerciseSelectionScreenState
                       if (_selectedExercisesForTheDay.isNotEmpty)
                         Container(
                           padding: const EdgeInsets.all(10),
-                          color: Colors.deepPurple.withOpacity(0.2),
+                          decoration: BoxDecoration(
+                            color: Colors.deepPurple.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20)
+                          ),
                           child: Column(
                             children: [
                               const Text(
                                 'Selected Exercises',
-                                style: TextStyle(fontSize: 18),
+                                style: TextStyle(fontSize: 16),
                               ),
                               const SizedBox(height: 10),
                               ..._selectedExercisesForTheDay
