@@ -4,12 +4,14 @@ class CategoryCard extends StatelessWidget {
   final String name;
   final VoidCallback onTap;
   final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
   final bool displayCta;
   const CategoryCard({
     super.key,
     required this.name,
     required this.onTap,
     this.onDelete,
+    this.onEdit,
     required this.displayCta,
   });
 
@@ -43,7 +45,9 @@ class CategoryCard extends StatelessWidget {
                           height: 32,
                           width: 32,
                           child: IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              onEdit!();
+                            },
                             icon: const Icon(
                               Icons.edit,
                               size: 17,

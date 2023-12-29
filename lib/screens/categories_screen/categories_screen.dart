@@ -16,9 +16,11 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   List<CategoryData> _categories = [];
+  CategoryData? _editingCategory;
 
   Future<List<CategoryData>> _loadCategories() async {
-    final query = database.select(database.category)..where((tbl) => tbl.status.equals('created'));
+    final query = database.select(database.category)
+      ..where((tbl) => tbl.status.equals('created'));
     List<CategoryData> allCategoryItems = await query.map((row) => row).get();
     return allCategoryItems;
   }
@@ -32,11 +34,23 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _handleCategoryBottomSheetSubmission(String categoryName) async {
     WidgetsFlutterBinding.ensureInitialized();
-    await database.into(database.category).insert(
-          CategoryCompanion.insert(
-            name: categoryName,
-          ),
-        );
+    if (_editingCategory != null) {
+      (database.update(database.category)
+            ..where(
+              (t) => t.id.equals(_editingCategory!.id),
+            ))
+          .write(
+        CategoryCompanion(
+          name: drift.Value(categoryName),
+        ),
+      );
+    } else {
+      await database.into(database.category).insert(
+            CategoryCompanion.insert(
+              name: categoryName,
+            ),
+          );
+    }
 
     _fetchCategories();
   }
@@ -46,6 +60,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       context: context,
       builder: (BuildContext context) {
         return CategoryBottomSheet(
+          isEditing: _editingCategory != null,
+          editingCategory: _editingCategory,
           handleSubmit: _handleCategoryBottomSheetSubmission,
         );
       },
@@ -64,16 +80,25 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _handleCategoryItemDelete(String categoryId) {
     (database.update(database.category)
-                    ..where(
-                      (t) => t.id.equals(categoryId),
-                    ))
-                  .write(
-                const CategoryCompanion(
-                    status: drift.Value("deleted"),
-                  ),
-                );
+          ..where(
+            (t) => t.id.equals(categoryId),
+          ))
+        .write(
+      const CategoryCompanion(
+        status: drift.Value("deleted"),
+      ),
+    );
 
-              _fetchCategories();
+    _fetchCategories();
+  }
+
+  void _handleCategoryItemEditClick(String categoryId) {
+    CategoryData item =
+        _categories.firstWhere((element) => element.id == categoryId);
+    setState(() {
+      _editingCategory = item;
+    });
+    _showCustomBottomSheet(context);
   }
 
   @override
@@ -108,7 +133,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           child: Text(
                             'Categories',
                             style: TextStyle(
-                                fontSize: 25, fontWeight: FontWeight.bold,),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -121,7 +148,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     name: e.value.name,
                                     onTap: () => _handleCategoryCardClick(
                                         e.value.id, e.value.name),
-                                    onDelete: () => _handleCategoryItemDelete(e.value.id),
+                                    onDelete: () =>
+                                        _handleCategoryItemDelete(e.value.id),
+                                    onEdit: () => _handleCategoryItemEditClick(
+                                        e.value.id),
                                     displayCta: true,
                                   ),
                                   const SizedBox(height: 7)
