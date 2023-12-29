@@ -5,29 +5,38 @@ class ExerciseCard extends StatelessWidget {
   final bool isSelected;
   final bool isDisabled;
   final VoidCallback onTap;
-  const ExerciseCard({
-    super.key,
-    required this.name,
-    this.isSelected = false,
-    this.isDisabled = false,
-    required this.onTap
-  });
-
-
+  const ExerciseCard(
+      {super.key,
+      required this.name,
+      this.isSelected = false,
+      this.isDisabled = false,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: isDisabled? () {} : onTap,
-      child: Card(
+      onTap: isDisabled ? () {} : onTap,
+      child: Container(
         margin: EdgeInsets.zero,
-        elevation: 2,
-        color: isSelected ? Colors.deepPurple.withOpacity(0.4) : isDisabled ? Colors.blueGrey : Colors.white,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: isSelected
+              ? Colors.deepPurple.withOpacity(0.1)
+              : isDisabled
+                  ? Colors.grey.withOpacity(0.2)
+                  : Colors.white,
+        ),
         child: Padding(
           padding: const EdgeInsets.only(left: 15, top: 10, bottom: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text(name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),)],
+            children: [
+              Text(
+                name,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              )
+            ],
           ),
         ),
       ),
