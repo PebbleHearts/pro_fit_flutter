@@ -70,6 +70,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
 
   void _showCustomBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return ExerciseBottomSheet(
@@ -79,6 +80,11 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         );
       },
     );
+    if (_editingExercise != null) {
+      setState(() {
+        _editingExercise = null;
+      });
+    }
   }
 
   void _handleExerciseCardClick(String categoryId, String name) {}

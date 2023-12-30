@@ -74,6 +74,7 @@ class _DailyExerciseSelectionScreenState
 
   void _showCustomBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return ExerciseSelectionBottomSheet(

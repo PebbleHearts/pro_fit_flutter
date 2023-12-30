@@ -33,6 +33,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   void _showLogSetRecordBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return LogSetRecordBottomSheet(

@@ -60,6 +60,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void _showCustomBottomSheet(BuildContext context) async {
     final result = await showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return CategoryBottomSheet(
@@ -69,6 +70,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         );
       },
     );
+    if (_editingCategory != null) {
+      setState(() {
+        _editingCategory = null;
+      });
+    }
   }
 
   void _handleCategoryCardClick(String categoryId, String name) {
