@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
@@ -93,18 +94,27 @@ class _DailyExerciseSelectionScreenState
     });
   }
 
-  void _handleWorkoutLogBottomSheetSubmission() async {
+  Future<List<ExerciseLogData>> _getLatestLogOfSpecificExercise(String exerciseId) async {
+    final query = database.select(database.exerciseLog)
+      ..where((tbl) => tbl.exerciseId.equals(exerciseId))..orderBy([(t) => drift.OrderingTerm(expression: t.logDate, mode: drift.OrderingMode.desc)])..limit(1);
+    return query.map((row) => row).get();
+    
+  }
+
+  void _handleWorkoutLogSubmission() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     for (int i = 0; i < _selectedExercisesForTheDay.length; i++) {
+      final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(_selectedExercisesForTheDay[i].id);
+      final WorkoutRecord workoutRecords = latestSameExerciseLog.isNotEmpty ? latestSameExerciseLog[0].workoutRecords :  WorkoutRecord(
+                [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
+              );
       await database.into(database.exerciseLog).insert(
             ExerciseLogCompanion.insert(
               exerciseId: _selectedExercisesForTheDay[i].id,
               logDate: widget.selectedDate,
               description: "",
-              workoutRecords: WorkoutRecord(
-                [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
-              ),
+              workoutRecords: workoutRecords,
               order: i,
             ),
           );
@@ -217,7 +227,7 @@ class _DailyExerciseSelectionScreenState
                         MaterialStatePropertyAll(purpleTheme.primary),
                     overlayColor:
                         MaterialStatePropertyAll(purpleTheme.primary.withOpacity(0.5))),
-                onPressed: _handleWorkoutLogBottomSheetSubmission,
+                onPressed: _handleWorkoutLogSubmission,
                 child: const Text('Add'),
               ),
             ),

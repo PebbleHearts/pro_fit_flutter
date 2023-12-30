@@ -35,7 +35,7 @@ class DateItem extends StatelessWidget {
               formattedDate,
               style: TextStyle(
                 fontSize: 11,
-                fontWeight: FontWeight.w400,
+                fontWeight: isDateSelected ? FontWeight.bold : FontWeight.normal,
                 color: isDateSelected ? Colors.black : Colors.grey,
               ),
             ),
@@ -43,6 +43,7 @@ class DateItem extends StatelessWidget {
               formattedDay,
               style: TextStyle(
                 fontSize: 11,
+                fontWeight: isDateSelected ? FontWeight.bold : FontWeight.normal,
                 color: isDateSelected ? Colors.black : Colors.grey,
               ),
             ),
