@@ -22,6 +22,7 @@ class RoutineDetailsScreen extends StatefulWidget {
 
 class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
   List<CategoryData> _categories = [];
+  String _selectedCategoryId = '';
   List<ExerciseData> _selectedCategoryExercises = [];
   List<RoutineDetailItemWithExercise> _routineDetailItems = [];
 
@@ -98,6 +99,11 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
       builder: (BuildContext context) {
         return RoutineCategoryExerciseListingBottomSheet(
           exercises: _selectedCategoryExercises,
+          selectedExercisesForRoutine: _routineDetailItems
+              .where((element) =>
+                  element.exercise!.categoryId == _selectedCategoryId)
+              .map((e) => e.exercise)
+              .toList(),
           handleSubmit: _handleAddExercisesToRoutine,
         );
       },
@@ -113,6 +119,7 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
         await _fetchCategoryExercises(categoryId);
 
     setState(() {
+      _selectedCategoryId = categoryId;
       _selectedCategoryExercises = categoryExerciseItems;
     });
 

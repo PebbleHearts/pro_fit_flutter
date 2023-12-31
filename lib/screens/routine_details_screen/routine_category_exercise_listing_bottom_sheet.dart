@@ -6,10 +6,12 @@ import 'package:pro_fit_flutter/database/database.dart';
 
 class RoutineCategoryExerciseListingBottomSheet extends StatefulWidget {
   final List<ExerciseData> exercises;
+  final List<ExerciseData?> selectedExercisesForRoutine;
   final ValueSetter<List<ExerciseData>> handleSubmit;
   const RoutineCategoryExerciseListingBottomSheet({
     super.key,
     required this.exercises,
+    required this.selectedExercisesForRoutine,
     required this.handleSubmit,
   });
 
@@ -59,11 +61,13 @@ class _RoutineCategoryExerciseListingBottomSheetState
               (e) {
                 final isSelected = _selectedExercises
                     .any((element) => element.id == e.value.id);
+                final isDisabled = widget.selectedExercisesForRoutine.any((element) => element!.id == e.value.id);
                 return Column(
                   children: [
                     ExerciseCard(
                       name: e.value.name,
                       isSelected: isSelected,
+                      isDisabled: isDisabled,
                       displayCta: false,
                       onTap: () => _handleExerciseTap(e.value),
                     ),
