@@ -823,15 +823,422 @@ class ExerciseLogCompanion extends UpdateCompanion<ExerciseLogData> {
   }
 }
 
+class $RoutineTable extends Routine with TableInfo<$RoutineTable, RoutineData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoutineTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, name];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'routine';
+  @override
+  VerificationContext validateIntegrity(Insertable<RoutineData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  RoutineData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RoutineData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name'])!,
+    );
+  }
+
+  @override
+  $RoutineTable createAlias(String alias) {
+    return $RoutineTable(attachedDatabase, alias);
+  }
+}
+
+class RoutineData extends DataClass implements Insertable<RoutineData> {
+  final String id;
+  final String name;
+  const RoutineData({required this.id, required this.name});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['name'] = Variable<String>(name);
+    return map;
+  }
+
+  RoutineCompanion toCompanion(bool nullToAbsent) {
+    return RoutineCompanion(
+      id: Value(id),
+      name: Value(name),
+    );
+  }
+
+  factory RoutineData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RoutineData(
+      id: serializer.fromJson<String>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'name': serializer.toJson<String>(name),
+    };
+  }
+
+  RoutineData copyWith({String? id, String? name}) => RoutineData(
+        id: id ?? this.id,
+        name: name ?? this.name,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RoutineData(')
+          ..write('id: $id, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RoutineData && other.id == this.id && other.name == this.name);
+}
+
+class RoutineCompanion extends UpdateCompanion<RoutineData> {
+  final Value<String> id;
+  final Value<String> name;
+  final Value<int> rowid;
+  const RoutineCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RoutineCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.rowid = const Value.absent(),
+  }) : name = Value(name);
+  static Insertable<RoutineData> custom({
+    Expression<String>? id,
+    Expression<String>? name,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RoutineCompanion copyWith(
+      {Value<String>? id, Value<String>? name, Value<int>? rowid}) {
+    return RoutineCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutineCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $RoutineDetailItemTable extends RoutineDetailItem
+    with TableInfo<$RoutineDetailItemTable, RoutineDetailItemData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RoutineDetailItemTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      clientDefault: () => _uuid.v4());
+  static const VerificationMeta _routineIdMeta =
+      const VerificationMeta('routineId');
+  @override
+  late final GeneratedColumn<String> routineId = GeneratedColumn<String>(
+      'routine_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _exerciseIdMeta =
+      const VerificationMeta('exerciseId');
+  @override
+  late final GeneratedColumn<String> exerciseId = GeneratedColumn<String>(
+      'exercise_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, routineId, exerciseId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'routine_detail_item';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<RoutineDetailItemData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('routine_id')) {
+      context.handle(_routineIdMeta,
+          routineId.isAcceptableOrUnknown(data['routine_id']!, _routineIdMeta));
+    } else if (isInserting) {
+      context.missing(_routineIdMeta);
+    }
+    if (data.containsKey('exercise_id')) {
+      context.handle(
+          _exerciseIdMeta,
+          exerciseId.isAcceptableOrUnknown(
+              data['exercise_id']!, _exerciseIdMeta));
+    } else if (isInserting) {
+      context.missing(_exerciseIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  RoutineDetailItemData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RoutineDetailItemData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      routineId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}routine_id'])!,
+      exerciseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}exercise_id'])!,
+    );
+  }
+
+  @override
+  $RoutineDetailItemTable createAlias(String alias) {
+    return $RoutineDetailItemTable(attachedDatabase, alias);
+  }
+}
+
+class RoutineDetailItemData extends DataClass
+    implements Insertable<RoutineDetailItemData> {
+  final String id;
+  final String routineId;
+  final String exerciseId;
+  const RoutineDetailItemData(
+      {required this.id, required this.routineId, required this.exerciseId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['routine_id'] = Variable<String>(routineId);
+    map['exercise_id'] = Variable<String>(exerciseId);
+    return map;
+  }
+
+  RoutineDetailItemCompanion toCompanion(bool nullToAbsent) {
+    return RoutineDetailItemCompanion(
+      id: Value(id),
+      routineId: Value(routineId),
+      exerciseId: Value(exerciseId),
+    );
+  }
+
+  factory RoutineDetailItemData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RoutineDetailItemData(
+      id: serializer.fromJson<String>(json['id']),
+      routineId: serializer.fromJson<String>(json['routineId']),
+      exerciseId: serializer.fromJson<String>(json['exerciseId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'routineId': serializer.toJson<String>(routineId),
+      'exerciseId': serializer.toJson<String>(exerciseId),
+    };
+  }
+
+  RoutineDetailItemData copyWith(
+          {String? id, String? routineId, String? exerciseId}) =>
+      RoutineDetailItemData(
+        id: id ?? this.id,
+        routineId: routineId ?? this.routineId,
+        exerciseId: exerciseId ?? this.exerciseId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('RoutineDetailItemData(')
+          ..write('id: $id, ')
+          ..write('routineId: $routineId, ')
+          ..write('exerciseId: $exerciseId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, routineId, exerciseId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RoutineDetailItemData &&
+          other.id == this.id &&
+          other.routineId == this.routineId &&
+          other.exerciseId == this.exerciseId);
+}
+
+class RoutineDetailItemCompanion
+    extends UpdateCompanion<RoutineDetailItemData> {
+  final Value<String> id;
+  final Value<String> routineId;
+  final Value<String> exerciseId;
+  final Value<int> rowid;
+  const RoutineDetailItemCompanion({
+    this.id = const Value.absent(),
+    this.routineId = const Value.absent(),
+    this.exerciseId = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  RoutineDetailItemCompanion.insert({
+    this.id = const Value.absent(),
+    required String routineId,
+    required String exerciseId,
+    this.rowid = const Value.absent(),
+  })  : routineId = Value(routineId),
+        exerciseId = Value(exerciseId);
+  static Insertable<RoutineDetailItemData> custom({
+    Expression<String>? id,
+    Expression<String>? routineId,
+    Expression<String>? exerciseId,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (routineId != null) 'routine_id': routineId,
+      if (exerciseId != null) 'exercise_id': exerciseId,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  RoutineDetailItemCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? routineId,
+      Value<String>? exerciseId,
+      Value<int>? rowid}) {
+    return RoutineDetailItemCompanion(
+      id: id ?? this.id,
+      routineId: routineId ?? this.routineId,
+      exerciseId: exerciseId ?? this.exerciseId,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (routineId.present) {
+      map['routine_id'] = Variable<String>(routineId.value);
+    }
+    if (exerciseId.present) {
+      map['exercise_id'] = Variable<String>(exerciseId.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RoutineDetailItemCompanion(')
+          ..write('id: $id, ')
+          ..write('routineId: $routineId, ')
+          ..write('exerciseId: $exerciseId, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $CategoryTable category = $CategoryTable(this);
   late final $ExerciseTable exercise = $ExerciseTable(this);
   late final $ExerciseLogTable exerciseLog = $ExerciseLogTable(this);
+  late final $RoutineTable routine = $RoutineTable(this);
+  late final $RoutineDetailItemTable routineDetailItem =
+      $RoutineDetailItemTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [category, exercise, exerciseLog];
+      [category, exercise, exerciseLog, routine, routineDetailItem];
 }

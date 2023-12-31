@@ -1,8 +1,117 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
+import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/components/routine-card/routine_card.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
+import 'package:pro_fit_flutter/database/database.dart';
+import 'package:pro_fit_flutter/screens/exercises_screen/exercises_screen.dart';
+import 'package:pro_fit_flutter/screens/routine_details_screen/routine_details_screen.dart';
+import 'package:pro_fit_flutter/screens/routines_screen/routines_bottom_sheet.dart';
 
-class RoutinesScreen extends StatelessWidget {
+class RoutinesScreen extends StatefulWidget {
   const RoutinesScreen({super.key});
+
+  @override
+  State<RoutinesScreen> createState() => _RoutinesScreenState();
+}
+
+class _RoutinesScreenState extends State<RoutinesScreen> {
+  List<RoutineData> _routines = [];
+  RoutineData? _editingRoutine;
+
+  Future<List<RoutineData>> _loadRoutines() async {
+    List<RoutineData> allRoutineItems =
+        await database.select(database.routine).get();
+    return allRoutineItems;
+  }
+
+  void _fetchRoutines() async {
+    List<RoutineData> allRoutineItems = await _loadRoutines();
+    setState(() {
+      _routines = allRoutineItems;
+    });
+  }
+
+  void _handleRoutineBottomSheetSubmission(String routineName) async {
+    WidgetsFlutterBinding.ensureInitialized();
+    if (_editingRoutine != null) {
+      (database.update(database.routine)
+            ..where(
+              (t) => t.id.equals(_editingRoutine!.id),
+            ))
+          .write(
+        RoutineCompanion(
+          name: drift.Value(routineName),
+        ),
+      );
+      setState(() {
+        _editingRoutine = null;
+      });
+    } else {
+      await database.into(database.routine).insert(
+            RoutineCompanion.insert(
+              name: routineName,
+            ),
+          );
+    }
+
+    _fetchRoutines();
+  }
+
+  void _showCustomBottomSheet(BuildContext context) async {
+    final result = await showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return RoutineBottomSheet(
+          isEditing: _editingRoutine != null,
+          editingRoutine: _editingRoutine,
+          handleSubmit: _handleRoutineBottomSheetSubmission,
+        );
+      },
+    );
+    if (_editingRoutine != null) {
+      setState(() {
+        _editingRoutine = null;
+      });
+    }
+  }
+
+  void _handleRoutineCardClick(String routineId, String name) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RoutineDetailsScreen(
+          routineId: routineId,
+          routineName: name,
+        ),
+      ),
+    );
+  }
+
+  void _handleRoutineItemDelete(String routineId) {
+    (database.delete(database.routine)
+          ..where(
+            (tbl) => tbl.id.equals(routineId),
+          ))
+        .go();
+    _fetchRoutines();
+  }
+
+  void _handleRoutineItemEditClick(String routineId) {
+    RoutineData item =
+        _routines.firstWhere((element) => element.id == routineId);
+    setState(() {
+      _editingRoutine = item;
+    });
+    _showCustomBottomSheet(context);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRoutines();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +121,65 @@ class RoutinesScreen extends StatelessWidget {
         foregroundColor: Colors.white,
         title: const Text('ProFit'),
       ),
-      body: const Text('Routines'),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: purpleTheme.background,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 47, left: 10, right: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(
+                        height: 200,
+                        child: Center(
+                          child: Text(
+                            'Routines',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      ..._routines
+                          .asMap()
+                          .entries
+                          .map((e) => Column(
+                                children: [
+                                  RoutineCard(
+                                    name: e.value.name,
+                                    onTap: () => _handleRoutineCardClick(
+                                        e.value.id, e.value.name),
+                                    onDelete: () =>
+                                        _handleRoutineItemDelete(e.value.id),
+                                    onEdit: () =>
+                                        _handleRoutineItemEditClick(e.value.id),
+                                    displayCta: true,
+                                  ),
+                                  const SizedBox(height: 7)
+                                ],
+                              ))
+                          .toList(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton.small(
+          heroTag: null,
+          backgroundColor: purpleTheme.primary,
+          foregroundColor: Colors.white,
+          child: const Icon(Icons.add),
+          onPressed: () {
+            _showCustomBottomSheet(context);
+          }),
     );
   }
 }

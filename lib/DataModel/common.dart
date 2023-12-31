@@ -24,6 +24,16 @@ class ExerciseLogWithExercise {
   final ExerciseData? exercise;
 }
 
+class RoutineDetailItemWithExercise {
+  RoutineDetailItemWithExercise(
+    this.routineDetailItem,
+    this.exercise,
+  );
+
+  final RoutineDetailItemData routineDetailItem;
+  final ExerciseData? exercise;
+}
+
 class CustomBottomTabItem {
   IconData icon;
   String label;

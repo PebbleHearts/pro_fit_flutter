@@ -30,13 +30,31 @@ class Exercise extends Table {
 class ExerciseLog extends Table {
   TextColumn get id => text().clientDefault(() => _uuid.v4())();
   TextColumn get logDate => text()();
+  // TODO: Add a reference constraint for the category field
   TextColumn get exerciseId => text()();
   TextColumn get workoutRecords => text().map(const WorkoutRecordConverter())();
   TextColumn get description => text()();
   IntColumn get order => integer()();
 }
 
-@DriftDatabase(tables: [Category, Exercise, ExerciseLog])
+class Routine extends Table {
+  TextColumn get id => text().clientDefault(() => _uuid.v4())();
+  TextColumn get name => text()();
+}
+
+class RoutineDetailItem extends Table {
+  TextColumn get id => text().clientDefault(() => _uuid.v4())();
+  TextColumn get routineId => text()();
+  TextColumn get exerciseId => text()();
+}
+
+@DriftDatabase(tables: [
+  Category,
+  Exercise,
+  ExerciseLog,
+  Routine,
+  RoutineDetailItem,
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -45,11 +63,9 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration {
-    return MigrationStrategy(
-      beforeOpen: (details) async {
-        await customStatement('PRAGMA foreign_keys = ON');
-      }
-    );
+    return MigrationStrategy(beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    });
   }
 }
 
