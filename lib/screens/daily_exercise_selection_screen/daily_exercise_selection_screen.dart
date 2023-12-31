@@ -20,6 +20,7 @@ class DailyExerciseSelectionScreen extends StatefulWidget {
 class _DailyExerciseSelectionScreenState
     extends State<DailyExerciseSelectionScreen> {
   List<CategoryData> _categories = [];
+  String _selectedCategoryId = '';
   List<ExerciseData> _selectedCategoryExercises = [];
   List<ExerciseData> _selectedExercisesForTheDay = [];
   List<ExerciseLogData> _currentDayWorkoutLogItems = [];
@@ -49,6 +50,7 @@ class _DailyExerciseSelectionScreenState
         await _fetchCategoryExercises(id);
 
     setState(() {
+      _selectedCategoryId = id;
       _selectedCategoryExercises = categoryExerciseItems;
     });
     _showCustomBottomSheet(context);
@@ -79,8 +81,7 @@ class _DailyExerciseSelectionScreenState
       builder: (BuildContext context) {
         return ExerciseSelectionBottomSheet(
           categoryExercises: _selectedCategoryExercises,
-          // TODO: Shouldn't pass all the selectedExercisesFor the day. Instead we should only pass the exercises belonging to specific category
-          selectedExercisesForTheDay: _selectedExercisesForTheDay,
+          selectedExercisesForTheDay: _selectedExercisesForTheDay.where((element) => element.categoryId == _selectedCategoryId).toList(),
           currentDayWorkoutLogItems: _currentDayWorkoutLogItems,
           onAddClick: (value) {
             setState(() {
