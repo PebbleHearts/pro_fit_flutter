@@ -5,6 +5,7 @@ class RoutineCard extends StatelessWidget {
   final VoidCallback onTap;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
+  final bool isSelected;
   final bool displayCta;
   const RoutineCard({
     super.key,
@@ -12,6 +13,7 @@ class RoutineCard extends StatelessWidget {
     required this.onTap,
     this.onDelete,
     this.onEdit,
+    this.isSelected = false,
     required this.displayCta,
   });
 
@@ -23,7 +25,7 @@ class RoutineCard extends StatelessWidget {
         margin: EdgeInsets.zero,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
+          color: isSelected ? Colors.deepPurple.withOpacity(0.1) : Colors.white,
           border: Border.all(color: Colors.grey.withOpacity(0.2), width: 1),
         ),
         child: Padding(

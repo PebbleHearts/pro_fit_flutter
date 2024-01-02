@@ -9,6 +9,7 @@ import 'package:pro_fit_flutter/database/database.dart';
 import 'package:pro_fit_flutter/screens/daily_exercise_selection_screen/daily_exercise_selection_screen.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_item.dart';
 import 'package:pro_fit_flutter/screens/log_screen/log_set_record_bottom_sheet.dart';
+import 'package:pro_fit_flutter/screens/log_screen/routine_selection_bottom_sheet.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -19,6 +20,7 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreenState extends State<HistoryScreen> {
   List<ExerciseLogWithExercise> _selectedDayWorkoutLog = [];
+  List<RoutineData> _routines = [];
   String _selectedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   late ExerciseLogWithExercise _currentEditingLogItem;
 
@@ -115,6 +117,74 @@ class _HistoryScreenState extends State<HistoryScreen> {
     _fetchWorkoutLog();
   }
 
+  Future<List<RoutineData>> _loadRoutines() async {
+    List<RoutineData> allRoutineItems =
+        await database.select(database.routine).get();
+    return allRoutineItems;
+  }
+
+  Future<List<RoutineData>> _fetchRoutines() async {
+    List<RoutineData> allRoutineItems = await _loadRoutines();
+    return allRoutineItems;
+  }
+
+  Future<List<ExerciseLogData>> _getLatestLogOfSpecificExercise(
+      String exerciseId) async {
+    final query = database.select(database.exerciseLog)
+      ..where((tbl) => tbl.exerciseId.equals(exerciseId))
+      ..orderBy([
+        (t) => drift.OrderingTerm(
+            expression: t.logDate, mode: drift.OrderingMode.desc)
+      ])
+      ..limit(1);
+    return query.map((row) => row).get();
+  }
+
+  void _handleRoutineExecution(String routineId) async {
+    final query = database.select(database.routineDetailItem)..where((tbl) => tbl.routineId.equals(routineId));
+    List<RoutineDetailItemData> allRoutineItemWithId =  await query.map((p0) => p0).get();
+
+    for (int i = 0; i < allRoutineItemWithId.length; i++) {
+            final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(
+          allRoutineItemWithId[i].exerciseId);
+      final WorkoutRecord workoutRecords = latestSameExerciseLog.isNotEmpty
+          ? latestSameExerciseLog[0].workoutRecords
+          : WorkoutRecord(
+              [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
+            );
+      await database.into(database.exerciseLog).insert(
+            ExerciseLogCompanion.insert(
+              exerciseId: allRoutineItemWithId[i].exerciseId,
+              logDate: _selectedDate,
+              description: "",
+              workoutRecords: workoutRecords,
+              order: i,
+            ),
+          );
+      }
+
+      _fetchWorkoutLog();
+
+  }
+
+  _handleExecuteARoutineClick() async {
+    final List<RoutineData> allRoutineItems = await _fetchRoutines();
+    setState(() {
+      _routines = allRoutineItems;
+    });
+
+    await showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return RoutineSelectionBottomSheet(
+          routines: _routines,
+          onRoutineStart: _handleRoutineExecution
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,26 +219,42 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               ),
                             ),
                           ),
-                          ..._selectedDayWorkoutLog
-                              .asMap()
-                              .entries
-                              .map(
-                                (e) => Column(
-                                  children: [
-                                    LogItem(
-                                      logData: e.value,
-                                      onEdit: () => _handleEditHistoryItem(
-                                          e.value.workoutLog.id),
-                                      onDelete: () => _handleDeleteHistoryItem(
-                                          e.value.workoutLog.id),
-                                    ),
-                                    if (e.key <
-                                        _selectedDayWorkoutLog.length - 1)
-                                      const SizedBox(height: 7),
-                                  ],
-                                ),
-                              )
-                              .toList(),
+                          if (_selectedDayWorkoutLog.isNotEmpty)
+                            ..._selectedDayWorkoutLog
+                                .asMap()
+                                .entries
+                                .map(
+                                  (e) => Column(
+                                    children: [
+                                      LogItem(
+                                        logData: e.value,
+                                        onEdit: () => _handleEditHistoryItem(
+                                            e.value.workoutLog.id),
+                                        onDelete: () =>
+                                            _handleDeleteHistoryItem(
+                                                e.value.workoutLog.id),
+                                      ),
+                                      if (e.key <
+                                          _selectedDayWorkoutLog.length - 1)
+                                        const SizedBox(height: 7),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
+                          if (_selectedDayWorkoutLog.isEmpty)
+                            TextButton(
+                              onPressed: _handleExecuteARoutineClick,
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.play_circle),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text('Execute a Routine'),
+                                ],
+                              ),
+                            )
                         ],
                       ),
                     ),
