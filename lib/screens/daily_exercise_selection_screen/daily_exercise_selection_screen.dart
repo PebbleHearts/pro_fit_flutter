@@ -26,8 +26,9 @@ class _DailyExerciseSelectionScreenState
   List<ExerciseLogData> _currentDayWorkoutLogItems = [];
 
   Future<List<CategoryData>> _loadCategories() async {
-    List<CategoryData> allCategoryItems =
-        await database.select(database.category).get();
+    final query = database.select(database.category)
+      ..where((tbl) => tbl.status.equals('created'));
+    List<CategoryData> allCategoryItems = await query.map((p0) => p0).get();
     return allCategoryItems;
   }
 
@@ -40,7 +41,7 @@ class _DailyExerciseSelectionScreenState
 
   Future<List<ExerciseData>> _fetchCategoryExercises(categoryId) async {
     final query = database.select(database.exercise)
-      ..where((tbl) => tbl.categoryId.equals(categoryId));
+      ..where((tbl) => tbl.categoryId.equals(categoryId))..where((tbl) => tbl.status.equals('created'));
     final categoryExerciseItems = query.map((row) => row).get();
     return categoryExerciseItems;
   }
@@ -81,7 +82,9 @@ class _DailyExerciseSelectionScreenState
       builder: (BuildContext context) {
         return ExerciseSelectionBottomSheet(
           categoryExercises: _selectedCategoryExercises,
-          selectedExercisesForTheDay: _selectedExercisesForTheDay.where((element) => element.categoryId == _selectedCategoryId).toList(),
+          selectedExercisesForTheDay: _selectedExercisesForTheDay
+              .where((element) => element.categoryId == _selectedCategoryId)
+              .toList(),
           currentDayWorkoutLogItems: _currentDayWorkoutLogItems,
           onAddClick: (value) {
             setState(() {
@@ -96,21 +99,29 @@ class _DailyExerciseSelectionScreenState
     });
   }
 
-  Future<List<ExerciseLogData>> _getLatestLogOfSpecificExercise(String exerciseId) async {
+  Future<List<ExerciseLogData>> _getLatestLogOfSpecificExercise(
+      String exerciseId) async {
     final query = database.select(database.exerciseLog)
-      ..where((tbl) => tbl.exerciseId.equals(exerciseId))..orderBy([(t) => drift.OrderingTerm(expression: t.logDate, mode: drift.OrderingMode.desc)])..limit(1);
+      ..where((tbl) => tbl.exerciseId.equals(exerciseId))
+      ..orderBy([
+        (t) => drift.OrderingTerm(
+            expression: t.logDate, mode: drift.OrderingMode.desc)
+      ])
+      ..limit(1);
     return query.map((row) => row).get();
-    
   }
 
   void _handleWorkoutLogSubmission() async {
     WidgetsFlutterBinding.ensureInitialized();
 
     for (int i = 0; i < _selectedExercisesForTheDay.length; i++) {
-      final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(_selectedExercisesForTheDay[i].id);
-      final WorkoutRecord workoutRecords = latestSameExerciseLog.isNotEmpty ? latestSameExerciseLog[0].workoutRecords :  WorkoutRecord(
-                [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
-              );
+      final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(
+          _selectedExercisesForTheDay[i].id);
+      final WorkoutRecord workoutRecords = latestSameExerciseLog.isNotEmpty
+          ? latestSameExerciseLog[0].workoutRecords
+          : WorkoutRecord(
+              [WorkoutSet(0, 0), WorkoutSet(0, 0), WorkoutSet(0, 0)],
+            );
       await database.into(database.exerciseLog).insert(
             ExerciseLogCompanion.insert(
               exerciseId: _selectedExercisesForTheDay[i].id,
@@ -183,9 +194,8 @@ class _DailyExerciseSelectionScreenState
                         Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.deepPurple.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20)
-                          ),
+                              color: Colors.deepPurple.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(20)),
                           child: Column(
                             children: [
                               const Text(
@@ -224,11 +234,12 @@ class _DailyExerciseSelectionScreenState
               height: 40,
               child: ElevatedButton(
                 style: ButtonStyle(
-                    foregroundColor: const MaterialStatePropertyAll(Colors.white),
+                    foregroundColor:
+                        const MaterialStatePropertyAll(Colors.white),
                     backgroundColor:
                         MaterialStatePropertyAll(purpleTheme.primary),
-                    overlayColor:
-                        MaterialStatePropertyAll(purpleTheme.primary.withOpacity(0.5))),
+                    overlayColor: MaterialStatePropertyAll(
+                        purpleTheme.primary.withOpacity(0.5))),
                 onPressed: _handleWorkoutLogSubmission,
                 child: const Text('Add'),
               ),

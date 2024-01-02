@@ -61,13 +61,14 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
   }
 
   Future<List<CategoryData>> _loadCategories() async {
-    List<CategoryData> allCategoryItems =
-        await database.select(database.category).get();
+    final query = database.select(database.category)..where((tbl) => tbl.status.equals('created'));
+    List<CategoryData> allCategoryItems = await query.map((p0) => p0).get();
     return allCategoryItems;
   }
 
   void _fetchCategories() async {
     List<CategoryData> allCategoryItems = await _loadCategories();
+    print(allCategoryItems);
     setState(() {
       _categories = allCategoryItems;
     });
@@ -75,7 +76,7 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
   Future<List<ExerciseData>> _fetchCategoryExercises(categoryId) async {
     final query = database.select(database.exercise)
-      ..where((tbl) => tbl.categoryId.equals(categoryId));
+      ..where((tbl) => tbl.categoryId.equals(categoryId))..where((tbl) => tbl.status.equals('created'));
     final categoryExerciseItems = query.map((row) => row).get();
     return categoryExerciseItems;
   }
