@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pro_fit_flutter/constants/google.dart';
 import 'package:pro_fit_flutter/navigators/tab-navigator/tab_navigator.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pro_fit_flutter/states/user_state.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  void _handleCurrentUserChangeCallback(GoogleSignInAccount? accountData) {
+    ref.read(userNotifierProvider.notifier).setUserDetails(accountData);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    signInHelper.handleOnCurrentUserChanged(_handleCurrentUserChangeCallback);
+  }
 
   @override
   Widget build(BuildContext context) {

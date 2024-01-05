@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pro_fit_flutter/constants/google.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/cta_item.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/profile_card.dart';
+import 'package:pro_fit_flutter/states/user_state.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  void _handleGoogleSignIn() {
+    signInHelper.handleSignIn();
+  }
+
+  void _handleSignOut() {
+    signInHelper.handleSignOut();
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userDetails = ref.watch(userNotifierProvider);
+    final bool isLoggedIn = userDetails != null;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: purpleTheme.primary,
@@ -64,31 +78,32 @@ class SettingsScreen extends StatelessWidget {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Column(
-                                children: [
-                                  const ProfileCard(),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  CTAItem(
-                                    label: 'Upload',
-                                    icon: Icons.upload_rounded,
-                                    description:
-                                        'Save the local data to google drive',
-                                    onTap: () {},
-                                  ),
-                                  const SizedBox(
-                                    height: 7,
-                                  ),
-                                  CTAItem(
-                                    label: 'Download',
-                                    icon: Icons.download_rounded,
-                                    description:
-                                        'Import data from google drive',
-                                    onTap: () {},
-                                  ),
-                                ],
-                              ),
+                              if (isLoggedIn)
+                                Column(
+                                  children: [
+                                    ProfileCard(name: userDetails.displayName, email: userDetails.email, imageUrl: userDetails.photoUrl),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    CTAItem(
+                                      label: 'Upload',
+                                      icon: Icons.upload_rounded,
+                                      description:
+                                          'Save the local data to google drive',
+                                      onTap: dataBackupService.upload,
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    CTAItem(
+                                      label: 'Download',
+                                      icon: Icons.download_rounded,
+                                      description:
+                                          'Import data from google drive',
+                                      onTap: () {},
+                                    ),
+                                  ],
+                                ),
                               SizedBox(
                                 height: 40,
                                 child: ElevatedButton(
@@ -101,16 +116,18 @@ class SettingsScreen extends StatelessWidget {
                                       overlayColor: MaterialStatePropertyAll(
                                           purpleTheme.primary
                                               .withOpacity(0.5))),
-                                  onPressed: () {},
-                                  child: const Row(
+                                  onPressed: isLoggedIn
+                                      ? _handleSignOut
+                                      : _handleGoogleSignIn,
+                                  child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(Icons.logout),
-                                        SizedBox(
+                                        const Icon(Icons.logout),
+                                        const SizedBox(
                                           width: 10,
                                         ),
-                                        Text('Log Out')
+                                        Text(isLoggedIn ? 'Log Out' : 'Log In')
                                       ]),
                                 ),
                               )
