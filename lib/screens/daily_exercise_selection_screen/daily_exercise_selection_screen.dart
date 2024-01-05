@@ -2,6 +2,7 @@ import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/DataModel/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
+import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:pro_fit_flutter/database/database.dart';
@@ -232,14 +233,7 @@ class _DailyExerciseSelectionScreenState
             color: purpleTheme.background,
             child: SizedBox(
               height: 40,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    foregroundColor:
-                        const MaterialStatePropertyAll(Colors.white),
-                    backgroundColor:
-                        MaterialStatePropertyAll(purpleTheme.primary),
-                    overlayColor: MaterialStatePropertyAll(
-                        purpleTheme.primary.withOpacity(0.5))),
+              child: CustomElevatedButton(
                 onPressed: _handleWorkoutLogSubmission,
                 child: const Text('Add'),
               ),

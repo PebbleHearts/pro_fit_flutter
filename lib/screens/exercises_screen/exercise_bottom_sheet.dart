@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/custom-text-field/custom_text_field.dart';
+import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 
@@ -45,14 +46,7 @@ class _ExerciseBottomSheetState extends State<ExerciseBottomSheet> {
             ),
             SizedBox(
               height: 40,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  foregroundColor: const MaterialStatePropertyAll(Colors.white),
-                  backgroundColor:
-                      MaterialStatePropertyAll(purpleTheme.primary),
-                  overlayColor: MaterialStatePropertyAll(
-                      purpleTheme.primary.withOpacity(0.5)),
-                ),
+              child: CustomElevatedButton(
                 child: Text(widget.isEditing ? 'Save' : 'Create'),
                 onPressed: () {
                   widget.handleSubmit(_nameController.text);

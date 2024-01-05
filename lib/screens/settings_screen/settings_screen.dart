@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/constants/google.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/cta_item.dart';
@@ -86,7 +87,7 @@ class SettingsScreen extends ConsumerWidget {
                                       height: 10,
                                     ),
                                     CTAItem(
-                                      label: 'Upload',
+                                      label: 'Export',
                                       icon: Icons.upload_rounded,
                                       description:
                                           'Save the local data to google drive',
@@ -96,7 +97,7 @@ class SettingsScreen extends ConsumerWidget {
                                       height: 7,
                                     ),
                                     CTAItem(
-                                      label: 'Download',
+                                      label: 'Import',
                                       icon: Icons.download_rounded,
                                       description:
                                           'Import data from google drive',
@@ -106,16 +107,7 @@ class SettingsScreen extends ConsumerWidget {
                                 ),
                               SizedBox(
                                 height: 40,
-                                child: ElevatedButton(
-                                  style: ButtonStyle(
-                                      foregroundColor:
-                                          const MaterialStatePropertyAll(
-                                              Colors.white),
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          purpleTheme.primary),
-                                      overlayColor: MaterialStatePropertyAll(
-                                          purpleTheme.primary
-                                              .withOpacity(0.5))),
+                                child: CustomElevatedButton(
                                   onPressed: isLoggedIn
                                       ? _handleSignOut
                                       : _handleGoogleSignIn,

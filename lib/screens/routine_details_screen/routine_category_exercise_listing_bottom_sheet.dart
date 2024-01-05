@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
+import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
@@ -79,15 +80,7 @@ class _RoutineCategoryExerciseListingBottomSheetState
             const SizedBox(height: 10),
             SizedBox(
               height: 40,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                    foregroundColor:
-                        const MaterialStatePropertyAll(Colors.white),
-                    backgroundColor:
-                        MaterialStatePropertyAll(purpleTheme.primary),
-                    // TODO: Change the overlay color for this
-                    overlayColor: MaterialStatePropertyAll(
-                        purpleTheme.primary.withOpacity(0.5))),
+              child: CustomElevatedButton(
                 child: const Text('Add'),
                 onPressed: () {
                   _handleSubmit();
