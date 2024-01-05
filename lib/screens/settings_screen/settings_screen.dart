@@ -82,7 +82,10 @@ class SettingsScreen extends ConsumerWidget {
                               if (isLoggedIn)
                                 Column(
                                   children: [
-                                    ProfileCard(name: userDetails.displayName, email: userDetails.email, imageUrl: userDetails.photoUrl),
+                                    ProfileCard(
+                                        name: userDetails.displayName,
+                                        email: userDetails.email,
+                                        imageUrl: userDetails.photoUrl),
                                     const SizedBox(
                                       height: 10,
                                     ),
@@ -108,6 +111,13 @@ class SettingsScreen extends ConsumerWidget {
                               SizedBox(
                                 height: 40,
                                 child: CustomElevatedButton(
+                                  style: isLoggedIn
+                                      ? const ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.redAccent),
+                                        )
+                                      : null,
                                   onPressed: isLoggedIn
                                       ? _handleSignOut
                                       : _handleGoogleSignIn,

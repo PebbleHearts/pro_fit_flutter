@@ -17,12 +17,7 @@ class GoogleSignInHelper {
 
   Future<void> handleSignIn() async {
     try {
-      final account = await _googleSignIn.signIn();
-      if (account != null) {
-        final authenticatedClient =
-            await _googleSignIn.authenticatedClient() as dynamic;
-        driveApi = DriveApi(authenticatedClient);
-      }
+      await _googleSignIn.signIn();
     } catch (error) {
       print(error);
     }
@@ -31,7 +26,13 @@ class GoogleSignInHelper {
   void handleOnCurrentUserChanged(
       void Function(GoogleSignInAccount? accountData) callback) {
     _googleSignIn.signInSilently();
-    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+    _googleSignIn.onCurrentUserChanged
+        .listen((GoogleSignInAccount? account) async {
+      if (account != null) {
+        final authenticatedClient =
+            await _googleSignIn.authenticatedClient() as dynamic;
+        driveApi = DriveApi(authenticatedClient);
+      }
       callback(account);
     });
   }
