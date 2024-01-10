@@ -15,7 +15,7 @@ class $CategoryTable extends Category
       'id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      clientDefault: () => _uuid.v4());
+      clientDefault: () => uuidInstance.v4());
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -232,7 +232,7 @@ class $ExerciseTable extends Exercise
       'id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      clientDefault: () => _uuid.v4());
+      clientDefault: () => uuidInstance.v4());
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -489,7 +489,7 @@ class $ExerciseLogTable extends ExerciseLog
       'id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      clientDefault: () => _uuid.v4());
+      clientDefault: () => uuidInstance.v4());
   static const VerificationMeta _logDateMeta =
       const VerificationMeta('logDate');
   @override
@@ -834,7 +834,7 @@ class $RoutineTable extends Routine with TableInfo<$RoutineTable, RoutineData> {
       'id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      clientDefault: () => _uuid.v4());
+      clientDefault: () => uuidInstance.v4());
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1013,7 +1013,7 @@ class $RoutineDetailItemTable extends RoutineDetailItem
       'id', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      clientDefault: () => _uuid.v4());
+      clientDefault: () => uuidInstance.v4());
   static const VerificationMeta _routineIdMeta =
       const VerificationMeta('routineId');
   @override

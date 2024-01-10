@@ -7,46 +7,14 @@ import 'package:pro_fit_flutter/database/converters.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:drift/drift.dart';
-import 'package:uuid/uuid.dart';
+import 'package:pro_fit_flutter/database/schema/category.dart';
+import 'package:pro_fit_flutter/database/schema/exercise.dart';
+import 'package:pro_fit_flutter/database/schema/exercise_log.dart';
+import 'package:pro_fit_flutter/database/schema/routine.dart';
+import 'package:pro_fit_flutter/database/schema/routine_detail_item.dart';
+import 'package:pro_fit_flutter/constants/common.dart';
 
 part 'database.g.dart';
-
-final _uuid = Uuid();
-
-class Category extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v4())();
-  TextColumn get name => text()();
-  TextColumn get status => text().withDefault(const Constant('created'))();
-}
-
-class Exercise extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v4())();
-  TextColumn get name => text()();
-  // TODO: Add a reference constraint for the category field
-  TextColumn get categoryId => text()();
-  TextColumn get status => text().withDefault(const Constant('created'))();
-}
-
-class ExerciseLog extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v4())();
-  TextColumn get logDate => text()();
-  // TODO: Add a reference constraint for the category field
-  TextColumn get exerciseId => text()();
-  TextColumn get workoutRecords => text().map(const WorkoutRecordConverter())();
-  TextColumn get description => text()();
-  IntColumn get order => integer()();
-}
-
-class Routine extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v4())();
-  TextColumn get name => text()();
-}
-
-class RoutineDetailItem extends Table {
-  TextColumn get id => text().clientDefault(() => _uuid.v4())();
-  TextColumn get routineId => text()();
-  TextColumn get exerciseId => text()();
-}
 
 @DriftDatabase(tables: [
   Category,
@@ -54,7 +22,7 @@ class RoutineDetailItem extends Table {
   ExerciseLog,
   Routine,
   RoutineDetailItem,
-])
+],)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
