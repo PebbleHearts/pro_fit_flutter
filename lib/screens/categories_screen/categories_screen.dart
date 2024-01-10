@@ -18,15 +18,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   List<CategoryData> _categories = [];
   CategoryData? _editingCategory;
 
-  Future<List<CategoryData>> _loadCategories() async {
-    final query = database.select(database.category)
-      ..where((tbl) => tbl.status.equals('created'));
-    List<CategoryData> allCategoryItems = await query.map((row) => row).get();
-    return allCategoryItems;
-  }
-
   void _fetchCategories() async {
-    List<CategoryData> allCategoryItems = await _loadCategories();
+    List<CategoryData> allCategoryItems =
+        await database.categoryDao.getAllCategories();
     setState(() {
       _categories = allCategoryItems;
     });
@@ -35,24 +29,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   void _handleCategoryBottomSheetSubmission(String categoryName) async {
     WidgetsFlutterBinding.ensureInitialized();
     if (_editingCategory != null) {
-      (database.update(database.category)
-            ..where(
-              (t) => t.id.equals(_editingCategory!.id),
-            ))
-          .write(
-        CategoryCompanion(
-          name: drift.Value(categoryName),
-        ),
+      database.categoryDao.updateCategory(
+        CategoryCompanion(name: drift.Value(categoryName)),
+        _editingCategory!.id,
       );
       setState(() {
         _editingCategory = null;
       });
     } else {
-      await database.into(database.category).insert(
-            CategoryCompanion.insert(
-              name: categoryName,
-            ),
-          );
+      database.categoryDao.createCategory(categoryName);
     }
 
     _fetchCategories();
@@ -88,16 +73,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 
   void _handleCategoryItemDelete(String categoryId) {
-    (database.update(database.category)
-          ..where(
-            (t) => t.id.equals(categoryId),
-          ))
-        .write(
-      const CategoryCompanion(
-        status: drift.Value("deleted"),
-      ),
-    );
-
+    database.categoryDao.deleteCategoryItem(categoryId);
     _fetchCategories();
   }
 

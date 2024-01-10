@@ -1235,6 +1235,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $RoutineTable routine = $RoutineTable(this);
   late final $RoutineDetailItemTable routineDetailItem =
       $RoutineDetailItemTable(this);
+  late final CategoryDao categoryDao = CategoryDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
