@@ -25,11 +25,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
   late ExerciseLogWithExercise _currentEditingLogItem;
 
   void _handleDeleteHistoryItem(String id) {
-    (database.delete(database.exerciseLog)
-          ..where(
-            (tbl) => tbl.id.equals(id),
-          ))
-        .go();
+    database.exerciseLogDao.deleteExerciseLogItem(id);
     _fetchWorkoutLog();
   }
 
@@ -41,16 +37,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
         return LogSetRecordBottomSheet(
             currentEditingLogItem: _currentEditingLogItem,
             handleSubmit: (logRecord) {
-              (database.update(database.exerciseLog)
-                    ..where(
-                      (t) => t.id.equals(_currentEditingLogItem.workoutLog.id),
-                    ))
-                  .write(
+              database.exerciseLogDao.updateExerciseLog(
                 ExerciseLogCompanion(
                   workoutRecords: drift.Value(
                     WorkoutRecord(logRecord),
                   ),
                 ),
+                _currentEditingLogItem.workoutLog.id,
               );
 
               _fetchWorkoutLog();
@@ -70,22 +63,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
     _showLogSetRecordBottomSheet(context);
   }
 
-  Future<List<ExerciseLogWithExercise>> _loadWorkoutLog() async {
-    final query = database.select(database.exerciseLog).join([
-      drift.innerJoin(database.exercise,
-          database.exerciseLog.exerciseId.equalsExp(database.exercise.id)),
-    ])
-      ..where(
-        database.exerciseLog.logDate.equals(_selectedDate),
-      );
-    return query.map((row) {
-      return ExerciseLogWithExercise(row.readTable(database.exerciseLog),
-          row.readTable(database.exercise));
-    }).get();
-  }
-
   void _fetchWorkoutLog() async {
-    List<ExerciseLogWithExercise> workoutLogItems = await _loadWorkoutLog();
+    List<ExerciseLogWithExercise> workoutLogItems = await database
+        .exerciseLogDao
+        .getDayLogWithExerciseDetails(_selectedDate);
     setState(() {
       _selectedDayWorkoutLog = workoutLogItems;
     });
@@ -141,11 +122,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   }
 
   void _handleRoutineExecution(String routineId) async {
-    final query = database.select(database.routineDetailItem)..where((tbl) => tbl.routineId.equals(routineId));
-    List<RoutineDetailItemData> allRoutineItemWithId =  await query.map((p0) => p0).get();
+    final query = database.select(database.routineDetailItem)
+      ..where((tbl) => tbl.routineId.equals(routineId));
+    List<RoutineDetailItemData> allRoutineItemWithId =
+        await query.map((p0) => p0).get();
 
     for (int i = 0; i < allRoutineItemWithId.length; i++) {
-            final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(
+      final latestSameExerciseLog = await _getLatestLogOfSpecificExercise(
           allRoutineItemWithId[i].exerciseId);
       final WorkoutRecord workoutRecords = latestSameExerciseLog.isNotEmpty
           ? latestSameExerciseLog[0].workoutRecords
@@ -161,10 +144,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
               order: i,
             ),
           );
-      }
+    }
 
-      _fetchWorkoutLog();
-
+    _fetchWorkoutLog();
   }
 
   _handleExecuteARoutineClick() async {
@@ -178,9 +160,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
       context: context,
       builder: (BuildContext context) {
         return RoutineSelectionBottomSheet(
-          routines: _routines,
-          onRoutineStart: _handleRoutineExecution
-        );
+            routines: _routines, onRoutineStart: _handleRoutineExecution);
       },
     );
   }
