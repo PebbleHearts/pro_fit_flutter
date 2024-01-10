@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/components/horizontal-date-selector/horizontal_date_selector.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/converters.dart';

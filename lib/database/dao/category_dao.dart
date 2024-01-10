@@ -10,8 +10,14 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
     with _$CategoryDaoMixin {
   CategoryDao(AppDatabase db) : super(db);
 
+  Future<List<CategoryData>> getAllCategoriesIncludeDeleted() async {
+    final query = select(category);
+    List<CategoryData> allCategoryItems = await query.map((row) => row).get();
+    return allCategoryItems;
+  }
+
   Future<List<CategoryData>> getAllCategories() async {
-    final query = db.select(db.category)
+    final query = select(category)
       ..where((tbl) => tbl.status.equals('created'));
     List<CategoryData> allCategoryItems = await query.map((row) => row).get();
     return allCategoryItems;
@@ -21,19 +27,17 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
     CategoryCompanion companionData,
     String categoryId,
   ) async {
-    (db.update(db.category)..where((t) => t.id.equals(categoryId))).write(
+    (update(category)..where((t) => t.id.equals(categoryId))).write(
       companionData,
     );
   }
 
   void createCategory(String categoryName) async {
-    await db
-        .into(db.category)
-        .insert(CategoryCompanion.insert(name: categoryName));
+    await into(category).insert(CategoryCompanion.insert(name: categoryName));
   }
 
   void deleteCategoryItem(String categoryId) {
-        (db.update(db.category)
+    (update(category)
           ..where(
             (t) => t.id.equals(categoryId),
           ))

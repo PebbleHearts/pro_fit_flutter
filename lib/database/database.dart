@@ -14,6 +14,7 @@ import 'package:pro_fit_flutter/database/schema/routine.dart';
 import 'package:pro_fit_flutter/database/schema/routine_detail_item.dart';
 import 'package:pro_fit_flutter/constants/common.dart';
 import 'package:pro_fit_flutter/database/dao/category_dao.dart';
+import 'package:pro_fit_flutter/database/dao/exercise_dao.dart';
 
 part 'database.g.dart';
 
@@ -23,7 +24,7 @@ part 'database.g.dart';
   ExerciseLog,
   Routine,
   RoutineDetailItem,
-], daos: [CategoryDao])
+], daos: [CategoryDao, ExerciseDao])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 

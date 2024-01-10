@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 
 class BottomTabItem extends StatelessWidget {

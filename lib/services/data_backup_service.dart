@@ -1,7 +1,8 @@
 import 'dart:convert';
-
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/constants/google.dart';
+import 'package:pro_fit_flutter/database/database.dart';
 
 class DataBackupService {
   Future<String?> _createFolder(String folderName) async {
@@ -57,10 +58,24 @@ class DataBackupService {
     return fileId;
   }
 
-  Map<String, dynamic> _getBackupJsonData() {
+  Future<List<Map<String, dynamic>>> _getFormattedCategoriesData() async {
+    List<CategoryData> allCategoryItems =
+        await database.categoryDao.getAllCategoriesIncludeDeleted();
+    return allCategoryItems.map((e) => e.toJson()).toList();
+  }
+
+    Future<List<Map<String, dynamic>>> _getFormattedExercisesData() async {
+    List<ExerciseData> allExerciseItems =
+        await database.exerciseDao.getAllExercisesIncludeDeleted();
+    return allExerciseItems.map((e) => e.toJson()).toList();
+  }
+
+  Future<Map<String, dynamic>> _getBackupJsonData() async {
+    final categoryData = await _getFormattedCategoriesData();
+    final exercisesData = await _getFormattedExercisesData();
     final Map<String, dynamic> jsonContent = {
-      'key1': 'value1',
-      'key2': 'value 2',
+      'category': categoryData,
+      'exercise': exercisesData,
     };
     return jsonContent;
   }
@@ -74,7 +89,7 @@ class DataBackupService {
     if (fileId != null) {
       print(fileId);
 
-      final jsonContent = _getBackupJsonData();
+      final jsonContent = await _getBackupJsonData();
       final media = drive.Media(
           Stream.value(utf8.encode(json.encode(jsonContent))),
           json.encode(jsonContent).length,

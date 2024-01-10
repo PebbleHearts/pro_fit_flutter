@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/components/category-card/category_card.dart';
 import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';

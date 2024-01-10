@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
-import 'package:pro_fit_flutter/DataModel/common.dart';
+import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
@@ -23,18 +23,9 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   List<ExerciseData> _exercises = [];
   ExerciseData? _editingExercise;
 
-  Future<List<ExerciseData>> _loadExercises() async {
-    final query = database.select(database.exercise)
-      ..where(
-        (tbl) => tbl.categoryId.equals(widget.categoryId),
-      )
-      ..where((tbl) => tbl.status.equals("created"));
-    final exerciseItems = query.map((row) => row).get();
-    return exerciseItems;
-  }
-
   void _fetchExercises() async {
-    List<ExerciseData> exerciseItems = await _loadExercises();
+    List<ExerciseData> exerciseItems =
+        await database.exerciseDao.getCategoryExercises(widget.categoryId);
     setState(() {
       _exercises = exerciseItems;
     });
@@ -44,25 +35,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
     WidgetsFlutterBinding.ensureInitialized();
 
     if (_editingExercise != null) {
-      (database.update(database.exercise)
-            ..where(
-              (t) => t.id.equals(_editingExercise!.id),
-            ))
-          .write(
-        ExerciseCompanion(
-          name: drift.Value(exerciseName),
-        ),
-      );
+      database.exerciseDao.updateExerciseDetails(
+          ExerciseCompanion(name: drift.Value(exerciseName)),
+          _editingExercise!.id);
       setState(() {
         _editingExercise = null;
       });
     } else {
-      await database.into(database.exercise).insert(
-            ExerciseCompanion.insert(
-              name: exerciseName,
-              categoryId: widget.categoryId,
-            ),
-          );
+      database.exerciseDao.createExercise(exerciseName, widget.categoryId);
     }
 
     _fetchExercises();
@@ -90,15 +70,7 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   void _handleExerciseCardClick(String categoryId, String name) {}
 
   void _handleExerciseItemDelete(String exerciseId) {
-    (database.update(database.exercise)
-          ..where(
-            (t) => t.id.equals(exerciseId),
-          ))
-        .write(
-      const ExerciseCompanion(
-        status: drift.Value("deleted"),
-      ),
-    );
+    database.exerciseDao.deleteExerciseItem(exerciseId);
 
     _fetchExercises();
   }
