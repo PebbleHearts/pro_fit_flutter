@@ -4,7 +4,6 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'package:pro_fit_flutter/database/converters.dart';
-import 'package:pro_fit_flutter/database/dao/exercise_log_dao.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3_flutter_libs/sqlite3_flutter_libs.dart';
 import 'package:drift/drift.dart';
@@ -16,6 +15,8 @@ import 'package:pro_fit_flutter/database/schema/routine_detail_item.dart';
 import 'package:pro_fit_flutter/constants/common.dart';
 import 'package:pro_fit_flutter/database/dao/category_dao.dart';
 import 'package:pro_fit_flutter/database/dao/exercise_dao.dart';
+import 'package:pro_fit_flutter/database/dao/exercise_log_dao.dart';
+import 'package:pro_fit_flutter/database/dao/routine_dao.dart';
 
 part 'database.g.dart';
 
@@ -25,7 +26,7 @@ part 'database.g.dart';
   ExerciseLog,
   Routine,
   RoutineDetailItem,
-], daos: [CategoryDao, ExerciseDao, ExerciseLogDao])
+], daos: [CategoryDao, ExerciseDao, ExerciseLogDao, RoutineDao,])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 

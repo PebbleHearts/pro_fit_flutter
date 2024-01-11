@@ -4,7 +4,6 @@ import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/components/routine-card/routine_card.dart';
 import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
-import 'package:pro_fit_flutter/screens/exercises_screen/exercises_screen.dart';
 import 'package:pro_fit_flutter/screens/routine_details_screen/routine_details_screen.dart';
 import 'package:pro_fit_flutter/screens/routines_screen/routines_bottom_sheet.dart';
 
@@ -19,14 +18,9 @@ class _RoutinesScreenState extends State<RoutinesScreen> {
   List<RoutineData> _routines = [];
   RoutineData? _editingRoutine;
 
-  Future<List<RoutineData>> _loadRoutines() async {
-    List<RoutineData> allRoutineItems =
-        await database.select(database.routine).get();
-    return allRoutineItems;
-  }
-
   void _fetchRoutines() async {
-    List<RoutineData> allRoutineItems = await _loadRoutines();
+    List<RoutineData> allRoutineItems =
+        await database.routineDao.getAllRoutines();
     setState(() {
       _routines = allRoutineItems;
     });
@@ -35,24 +29,15 @@ class _RoutinesScreenState extends State<RoutinesScreen> {
   void _handleRoutineBottomSheetSubmission(String routineName) async {
     WidgetsFlutterBinding.ensureInitialized();
     if (_editingRoutine != null) {
-      (database.update(database.routine)
-            ..where(
-              (t) => t.id.equals(_editingRoutine!.id),
-            ))
-          .write(
-        RoutineCompanion(
-          name: drift.Value(routineName),
-        ),
+      database.routineDao.updateRoutine(
+        RoutineCompanion(name: drift.Value(routineName)),
+        _editingRoutine!.id,
       );
       setState(() {
         _editingRoutine = null;
       });
     } else {
-      await database.into(database.routine).insert(
-            RoutineCompanion.insert(
-              name: routineName,
-            ),
-          );
+      database.routineDao.createRoutine(routineName);
     }
 
     _fetchRoutines();
