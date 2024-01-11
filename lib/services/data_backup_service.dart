@@ -82,16 +82,25 @@ class DataBackupService {
     return allRoutinesItems.map((e) => e.toJson()).toList();
   }
 
+  Future<List<Map<String, dynamic>>>
+      _getFormattedRoutineDetailItemsData() async {
+    List<RoutineDetailItemData> allRoutineDetailItems =
+        await database.routineDetailItemDao.getAllRoutineDetailItems();
+    return allRoutineDetailItems.map((e) => e.toJson()).toList();
+  }
+
   Future<Map<String, dynamic>> _getBackupJsonData() async {
     final categoryData = await _getFormattedCategoriesData();
     final exercisesData = await _getFormattedExercisesData();
     final exerciseLogsData = await _getFormattedExerciseLogsData();
     final routineData = await _getFormattedRoutinesData();
+    final routineDetailItemsData = await _getFormattedRoutineDetailItemsData();
     final Map<String, dynamic> jsonContent = {
       'category': categoryData,
       'exercise': exercisesData,
       'exerciseLogs': exerciseLogsData,
       'routine': routineData,
+      'routineDetailItems': routineDetailItemsData,
     };
     return jsonContent;
   }

@@ -26,69 +26,28 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
   List<ExerciseData> _selectedCategoryExercises = [];
   List<RoutineDetailItemWithExercise> _routineDetailItems = [];
 
-  Future<List<RoutineDetailItemWithExercise>> _loadRoutineDetailItems() async {
-    // final query = database.select(database.routineDetailItem)
-    //   ..where(
-    //     (tbl) => tbl.routineId.equals(widget.routineId),
-    //   );
-    // final exerciseItems = query.map((row) => row).get();
-    // return exerciseItems;
-
-    final query = database.select(database.routineDetailItem).join([
-      drift.innerJoin(
-          database.exercise,
-          database.routineDetailItem.exerciseId
-              .equalsExp(database.exercise.id)),
-    ])
-      ..where(
-        database.routineDetailItem.routineId.equals(widget.routineId),
-      );
-    return query.map((row) {
-      return RoutineDetailItemWithExercise(
-          row.readTable(database.routineDetailItem),
-          row.readTable(
-            database.exercise,
-          ));
-    }).get();
-  }
-
   void _fetchRoutineDetailItems() async {
-    List<RoutineDetailItemWithExercise> routineDetailItems =
-        await _loadRoutineDetailItems();
+    List<RoutineDetailItemWithExercise> routineDetailItems = await database
+        .routineDetailItemDao
+        .getRoutineDetailItems(widget.routineId);
     setState(() {
       _routineDetailItems = routineDetailItems;
     });
   }
 
-  Future<List<CategoryData>> _loadCategories() async {
-    final query = database.select(database.category)..where((tbl) => tbl.status.equals('created'));
-    List<CategoryData> allCategoryItems = await query.map((p0) => p0).get();
-    return allCategoryItems;
-  }
-
   void _fetchCategories() async {
-    List<CategoryData> allCategoryItems = await _loadCategories();
+    List<CategoryData> allCategoryItems =
+        await database.categoryDao.getAllCategories();
     print(allCategoryItems);
     setState(() {
       _categories = allCategoryItems;
     });
   }
 
-  Future<List<ExerciseData>> _fetchCategoryExercises(categoryId) async {
-    final query = database.select(database.exercise)
-      ..where((tbl) => tbl.categoryId.equals(categoryId))..where((tbl) => tbl.status.equals('created'));
-    final categoryExerciseItems = query.map((row) => row).get();
-    return categoryExerciseItems;
-  }
-
   void _handleAddExercisesToRoutine(List<ExerciseData> selectedItems) async {
     for (int i = 0; i < selectedItems.length; i++) {
-      await database.into(database.routineDetailItem).insert(
-            RoutineDetailItemCompanion.insert(
-              routineId: widget.routineId,
-              exerciseId: selectedItems[i].id,
-            ),
-          );
+      await database.routineDetailItemDao
+          .createRoutineDetailItem(widget.routineId, selectedItems[i].id);
     }
     _fetchRoutineDetailItems();
   }
@@ -117,7 +76,7 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
 
   void _handleBottomSheetCategoryItemClick(String categoryId) async {
     final List<ExerciseData> categoryExerciseItems =
-        await _fetchCategoryExercises(categoryId);
+        await database.exerciseDao.getCategoryExercises(categoryId);
 
     setState(() {
       _selectedCategoryId = categoryId;
@@ -140,13 +99,7 @@ class _RoutineDetailsScreenState extends State<RoutineDetailsScreen> {
   }
 
   void _handleRoutineDetailsItemDelete(String routineDetailItemId) {
-    print(routineDetailItemId);
-    (database.delete(database.routineDetailItem)
-          ..where(
-            (tbl) => tbl.id.equals(routineDetailItemId),
-          ))
-        .go();
-
+    database.routineDetailItemDao.deleteRoutineDetailItem(routineDetailItemId);
     _fetchRoutineDetailItems();
   }
 
