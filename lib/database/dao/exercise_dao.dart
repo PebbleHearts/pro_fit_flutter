@@ -34,6 +34,10 @@ class ExerciseDao extends DatabaseAccessor<AppDatabase>
         .write(companionData);
   }
 
+    void insertExerciseRow(ExerciseCompanion companionData,) async {
+    await into(exercise).insert(companionData);
+  }
+
   void createExercise(String exerciseName, String categoryId) {
     into(exercise).insert(
       ExerciseCompanion.insert(

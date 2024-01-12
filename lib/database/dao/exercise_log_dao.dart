@@ -12,6 +12,12 @@ class ExerciseLogDao extends DatabaseAccessor<AppDatabase>
     with _$ExerciseLogDaoMixin {
   ExerciseLogDao(AppDatabase db) : super(db);
 
+  void insertExerciseLogRow(
+    ExerciseLogCompanion companionData,
+  ) async {
+    await into(exerciseLog).insert(companionData);
+  }
+
   Future<List<ExerciseLogData>> getAllExercisesLog() async {
     final query = select(exerciseLog);
     List<ExerciseLogData> allExerciseLogItems =

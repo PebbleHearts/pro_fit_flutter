@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:drift/drift.dart' as drift;
 import 'package:pro_fit_flutter/data-model/common.dart';
 import 'package:pro_fit_flutter/constants/google.dart';
 import 'package:pro_fit_flutter/database/database.dart';
@@ -122,6 +123,95 @@ class DataBackupService {
 
       final fileItem = await signInHelper.driveApi?.files
           .update(drive.File(), fileId, uploadMedia: media);
+    }
+  }
+
+  Future<void> _initializeCategoryData(List<dynamic> categoryTableJson) async {
+    for (var i = 0; i < categoryTableJson.length; i++) {
+      final data = CategoryData.fromJson(categoryTableJson[i]);
+      database.categoryDao.insertCategoryRow(
+        CategoryCompanion(
+          id: drift.Value(data.id),
+          name: drift.Value(data.name),
+          status: drift.Value(data.status),
+        ),
+      );
+    }
+  }
+
+  Future<void> _initializeExerciseData(List<dynamic> exerciseTableJson) async {
+    for (var i = 0; i < exerciseTableJson.length; i++) {
+      final data = ExerciseData.fromJson(exerciseTableJson[i]);
+      database.exerciseDao.insertExerciseRow(
+        ExerciseCompanion(
+          id: drift.Value(data.id),
+          name: drift.Value(data.name),
+          categoryId: drift.Value(data.categoryId),
+          status: drift.Value(data.status),
+        ),
+      );
+    }
+  }
+
+  Future<void> _initializeExerciseLogData(
+      List<dynamic> exerciseLogTableJson) async {
+    for (var i = 0; i < exerciseLogTableJson.length; i++) {
+      final data = ExerciseLogData.fromJson(exerciseLogTableJson[i]);
+      database.exerciseLogDao.insertExerciseLogRow(
+        ExerciseLogCompanion(
+          id: drift.Value(data.id),
+          exerciseId: drift.Value(data.exerciseId),
+          workoutRecords: drift.Value(data.workoutRecords),
+          description: drift.Value(data.description),
+          logDate: drift.Value(data.logDate),
+          order: drift.Value(data.order),
+        ),
+      );
+    }
+  }
+
+  Future<void> _initializeRoutineData(List<dynamic> routineTableJson) async {
+    for (var i = 0; i < routineTableJson.length; i++) {
+      final data = RoutineData.fromJson(routineTableJson[i]);
+      database.routineDao.insertRoutineRow(
+        RoutineCompanion(
+          id: drift.Value(data.id),
+          name: drift.Value(data.name),
+        ),
+      );
+    }
+  }
+
+  Future<void> _initializeRoutineDetailItemData(
+      List<dynamic> routineDetailItemsTableJson) async {
+    for (var i = 0; i < routineDetailItemsTableJson.length; i++) {
+      final data = RoutineDetailItemData.fromJson(routineDetailItemsTableJson[i]);
+      database.routineDetailItemDao.insertRoutineDetailItemRow(
+        RoutineDetailItemCompanion(
+          id: drift.Value(data.id),
+          exerciseId: drift.Value(data.exerciseId),
+          routineId: drift.Value(data.routineId),
+        ),
+      );
+    }
+  }
+
+  void import() async {
+    String? fileId;
+    String? folderId = await _getFolderId('profit-backup-flutter');
+    if (folderId != null) {
+      fileId = await _getFileId(folderId, 'profit.json');
+    }
+    if (fileId != null) {
+      final drive.Media media = await signInHelper.driveApi?.files.get(fileId,
+          downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
+      String fullText = await utf8.decodeStream((media.stream));
+      Map<String, dynamic> jsonMap = json.decode(fullText);
+      await _initializeCategoryData(jsonMap['category']);
+      await _initializeExerciseData(jsonMap['exercise']);
+      // await _initializeExerciseLogData(jsonMap['exerciseLogs']);
+      await _initializeRoutineData(jsonMap['routine']);
+      await _initializeRoutineDetailItemData(jsonMap['routineDetailItems']);
     }
   }
 }

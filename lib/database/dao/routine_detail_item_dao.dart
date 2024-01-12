@@ -12,6 +12,12 @@ class RoutineDetailItemDao extends DatabaseAccessor<AppDatabase>
     with _$RoutineDetailItemDaoMixin {
   RoutineDetailItemDao(AppDatabase db) : super(db);
 
+  void insertRoutineDetailItemRow(
+    RoutineDetailItemCompanion companionData,
+  ) async {
+    await into(routineDetailItem).insert(companionData);
+  }
+
   Future<List<RoutineDetailItemWithExercise>> getRoutineDetailItems(
       String routineId) async {
     final query = select(routineDetailItem).join([

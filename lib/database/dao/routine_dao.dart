@@ -15,6 +15,12 @@ class RoutineDao extends DatabaseAccessor<AppDatabase> with _$RoutineDaoMixin {
     return allRoutineItems;
   }
 
+  void insertRoutineRow(
+    RoutineCompanion companionData,
+  ) async {
+    await into(routine).insert(companionData);
+  }
+
   void createRoutine(String routineName) async {
     await database
         .into(database.routine)
@@ -22,12 +28,12 @@ class RoutineDao extends DatabaseAccessor<AppDatabase> with _$RoutineDaoMixin {
   }
 
   void updateRoutine(RoutineCompanion companion, String routineId) {
-          (database.update(database.routine)
-            ..where(
-              (t) => t.id.equals(routineId),
-            ))
-          .write(
-        companion,
-      );
+    (database.update(database.routine)
+          ..where(
+            (t) => t.id.equals(routineId),
+          ))
+        .write(
+      companion,
+    );
   }
 }

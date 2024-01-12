@@ -36,6 +36,12 @@ class CategoryDao extends DatabaseAccessor<AppDatabase>
     await into(category).insert(CategoryCompanion.insert(name: categoryName));
   }
 
+  void insertCategoryRow(
+    CategoryCompanion companionData,
+  ) async {
+    await into(category).insert(companionData);
+  }
+
   void deleteCategoryItem(String categoryId) {
     (update(category)
           ..where(

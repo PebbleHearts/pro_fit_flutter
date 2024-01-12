@@ -104,7 +104,7 @@ class SettingsScreen extends ConsumerWidget {
                                       icon: Icons.download_rounded,
                                       description:
                                           'Import data from google drive',
-                                      onTap: () {},
+                                      onTap: dataBackupService.import,
                                     ),
                                   ],
                                 ),
