@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class CTAItem extends StatelessWidget {
   final IconData icon;
   final String label;
   final String description;
+  final bool isLoading;
   final VoidCallback onTap;
   const CTAItem({
     super.key,
     required this.label,
     required this.icon,
     required this.description,
+    required this.isLoading,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: isLoading ? null: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding:
+            const EdgeInsets.only(left: 10, right: 15, top: 10, bottom: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.white,
@@ -30,19 +34,29 @@ class CTAItem extends StatelessWidget {
             const SizedBox(
               width: 20,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  description,
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
-                ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    description,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
+                ],
+              ),
             ),
+            if (isLoading)
+              const SizedBox(
+                width: 25,
+                height: 25,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                ),
+              )
           ],
         ),
       ),

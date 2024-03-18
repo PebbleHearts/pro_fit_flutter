@@ -106,7 +106,7 @@ class DataBackupService {
     return jsonContent;
   }
 
-  void upload() async {
+  Future<void> upload() async {
     String? fileId;
     String? folderId = await _getFolderId('profit-backup-flutter');
     if (folderId != null) {
@@ -196,7 +196,7 @@ class DataBackupService {
     }
   }
 
-  void import() async {
+  Future<void> import() async {
     String? fileId;
     String? folderId = await _getFolderId('profit-backup-flutter');
     if (folderId != null) {

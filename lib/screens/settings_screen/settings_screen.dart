@@ -7,8 +7,16 @@ import 'package:pro_fit_flutter/screens/settings_screen/cta_item.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/profile_card.dart';
 import 'package:pro_fit_flutter/states/user_state.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool isUploading = false;
+  bool isImporting = false;
 
   void _handleGoogleSignIn() {
     signInHelper.handleSignIn();
@@ -18,8 +26,28 @@ class SettingsScreen extends ConsumerWidget {
     signInHelper.handleSignOut();
   }
 
+  void _startUpload() async {
+    setState(() {
+      isUploading = true;
+    });
+    await dataBackupService.upload();
+        setState(() {
+      isUploading = false;
+    });
+  }
+
+  void _startImport() async {
+    setState(() {
+      isImporting = true;
+    });
+    await dataBackupService.import();
+        setState(() {
+      isImporting = false;
+    });
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final userDetails = ref.watch(userNotifierProvider);
     final bool isLoggedIn = userDetails != null;
 
@@ -94,7 +122,8 @@ class SettingsScreen extends ConsumerWidget {
                                       icon: Icons.upload_rounded,
                                       description:
                                           'Save the local data to google drive',
-                                      onTap: dataBackupService.upload,
+                                      onTap: _startUpload,
+                                      isLoading: isUploading,
                                     ),
                                     const SizedBox(
                                       height: 7,
@@ -104,7 +133,8 @@ class SettingsScreen extends ConsumerWidget {
                                       icon: Icons.download_rounded,
                                       description:
                                           'Import data from google drive',
-                                      onTap: dataBackupService.import,
+                                      onTap: _startImport,
+                                      isLoading: isImporting,
                                     ),
                                   ],
                                 ),
