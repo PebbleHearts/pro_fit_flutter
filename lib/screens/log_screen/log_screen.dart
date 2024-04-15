@@ -265,27 +265,3 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 }
-
-
-// ReorderableListView(
-//   shrinkWrap: true,
-//   children: [
-//     ..._selectedDayWorkoutLog
-//         .asMap()
-//         .entries
-//         .map(
-//           (e) => HistoryItem(
-//             key: ValueKey(e.value.workoutLog.id),
-//             logData: e.value,
-//             onEdit: () => _handleEditHistoryItem(
-//                 e.value.workoutLog.id),
-//             onDelete: () => _handleDeleteHistoryItem(
-//                 e.value.workoutLog.id),
-//           ),
-//         )
-//         .toList(),
-//   ],
-//   onReorder: (lastPosition, newPosition) {
-//     print({lastPosition, newPosition});
-//   },
-// )

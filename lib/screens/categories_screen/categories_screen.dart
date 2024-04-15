@@ -157,7 +157,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           foregroundColor: Colors.white,
           child: const Icon(Icons.add),
           onPressed: () {
-            // _showCustomBottomSheet(context);
+            _showCustomBottomSheet(context);
             _fetchCategories();
           }),
     );

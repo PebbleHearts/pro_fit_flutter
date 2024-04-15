@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pro_fit_flutter/components/bottom-sheet/bottom_sheet.dart';
 import 'package:pro_fit_flutter/components/custom_elevated_button/custom_elevated_button.dart';
 import 'package:pro_fit_flutter/components/exercise-card/exercise_card.dart';
-import 'package:pro_fit_flutter/constants/theme.dart';
 import 'package:pro_fit_flutter/database/database.dart';
 
 class ExerciseSelectionBottomSheet extends StatefulWidget {
@@ -83,7 +82,7 @@ class _ExerciseSelectionBottomSheetState
             SizedBox(
               height: 40,
               child: CustomElevatedButton(
-                child: const Text('Add'),
+                child: const Text('Update'),
                 onPressed: () {
                   widget.onAddClick(_selectedExercises);
                   Navigator.pop(context);

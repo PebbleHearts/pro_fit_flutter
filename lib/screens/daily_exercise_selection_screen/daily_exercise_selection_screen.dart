@@ -88,8 +88,19 @@ class _DailyExerciseSelectionScreenState
               .toList(),
           currentDayWorkoutLogItems: _currentDayWorkoutLogItems,
           onAddClick: (value) {
+              print('here $value') ;
+              List<ExerciseData> updatedSelectedExercisesForTheDay = [..._selectedExercisesForTheDay];
+              updatedSelectedExercisesForTheDay = updatedSelectedExercisesForTheDay.where((element) => (element.categoryId != _selectedCategoryId || (element.categoryId == _selectedCategoryId && value.indexWhere((item) => item.id == element.id) != -1))).toList();
+              if (value.isNotEmpty) {
+                for (var newItem in value) {
+                  final alreadyHasItem = updatedSelectedExercisesForTheDay.indexWhere((item) => item.id == newItem.id) != -1;
+                  if (!alreadyHasItem) {
+                    updatedSelectedExercisesForTheDay.add(newItem);
+                  }
+                }
+              }
             setState(() {
-              _selectedExercisesForTheDay = value;
+              _selectedExercisesForTheDay = updatedSelectedExercisesForTheDay;
             });
           },
         );
