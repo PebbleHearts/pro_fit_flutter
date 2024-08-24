@@ -5,7 +5,7 @@ import 'package:googleapis/drive/v3.dart';
 const List<String> scopes = <String>[
   'profile',
   'email',
-  'https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/drive.appdata'
 ];
 
 class GoogleSignInHelper {

@@ -20,10 +20,10 @@ class DataBackupService {
     return null;
   }
 
-  Future<String?> _createFile(String fileName, String folderId) async {
+  Future<String?> _createFile(String fileName) async {
     final file = drive.File(
       name: fileName,
-      parents: [folderId],
+      parents: ['appDataFolder'],
     );
     final drive.File? createdFile =
         await signInHelper.driveApi?.files.create(file);
@@ -47,14 +47,16 @@ class DataBackupService {
     return folderId;
   }
 
-  Future<String?> _getFileId(String folderId, String fileName) async {
+  Future<String?> _getFileId(String fileName) async {
     String? fileId;
     final drive.FileList? data = await signInHelper.driveApi?.files.list(
-        q: "'$folderId' in parents and name='profit.json' and trashed=false");
+      spaces: 'appDataFolder',  // Restrict query to appDataFolder
+      q: "name='$fileName' and trashed=false"
+    );
     if (data != null && data.files != null && data.files!.isNotEmpty) {
       fileId = data.files?.first.id;
     } else {
-      fileId = await _createFile(fileName, folderId);
+      fileId = await _createFile(fileName);
     }
     return fileId;
   }
@@ -107,11 +109,7 @@ class DataBackupService {
   }
 
   Future<void> upload() async {
-    String? fileId;
-    String? folderId = await _getFolderId('profit-backup-flutter');
-    if (folderId != null) {
-      fileId = await _getFileId(folderId, 'profit.json');
-    }
+    String? fileId = await _getFileId('profit.json');
     if (fileId != null) {
       print(fileId);
 
@@ -121,8 +119,13 @@ class DataBackupService {
           json.encode(jsonContent).length,
           contentType: 'application/json');
 
-      final fileItem = await signInHelper.driveApi?.files
-          .update(drive.File(), fileId, uploadMedia: media);
+      try {
+        final fileItem = await signInHelper.driveApi?.files
+            .update(drive.File(), fileId, uploadMedia: media);
+        print('uploaded: ${fileItem}');
+      } catch (_) {
+        print('Error uploading file');
+      }
     }
   }
 
@@ -198,18 +201,16 @@ class DataBackupService {
 
   Future<void> import() async {
     String? fileId;
-    String? folderId = await _getFolderId('profit-backup-flutter');
-    if (folderId != null) {
-      fileId = await _getFileId(folderId, 'profit.json');
-    }
+    fileId = await _getFileId('profit.json');
     if (fileId != null) {
       final drive.Media media = await signInHelper.driveApi?.files.get(fileId,
           downloadOptions: drive.DownloadOptions.fullMedia) as drive.Media;
       String fullText = await utf8.decodeStream((media.stream));
+      print(fullText);
       Map<String, dynamic> jsonMap = json.decode(fullText);
       await _initializeCategoryData(jsonMap['category']);
       await _initializeExerciseData(jsonMap['exercise']);
-      // await _initializeExerciseLogData(jsonMap['exerciseLogs']);
+      await _initializeExerciseLogData(jsonMap['exerciseLogs']);
       await _initializeRoutineData(jsonMap['routine']);
       await _initializeRoutineDetailItemData(jsonMap['routineDetailItems']);
     }
