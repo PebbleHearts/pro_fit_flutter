@@ -16,7 +16,7 @@ class _TabNavigatorState extends State<TabNavigator> {
   int _currentIndex = 0;
 
   final _pages = [
-    HistoryScreen(),
+    const HistoryScreen(),
     const CategoriesScreen(),
     const RoutinesScreen(),
     const SettingsScreen(),

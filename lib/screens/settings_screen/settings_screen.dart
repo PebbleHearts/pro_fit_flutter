@@ -7,6 +7,7 @@ import 'package:pro_fit_flutter/screens/settings_screen/cta_item.dart';
 import 'package:pro_fit_flutter/screens/settings_screen/profile_card.dart';
 import 'package:pro_fit_flutter/states/user_state.dart';
 
+
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
@@ -18,7 +19,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool isUploading = false;
   bool isImporting = false;
 
-  void _handleGoogleSignIn() {
+  
+
+  Future<dynamic> _handleGoogleSignIn() async {
     signInHelper.handleSignIn();
   }
 
@@ -31,7 +34,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       isUploading = true;
     });
     await dataBackupService.upload();
-        setState(() {
+    setState(() {
       isUploading = false;
     });
   }
@@ -41,7 +44,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       isImporting = true;
     });
     await dataBackupService.import();
-        setState(() {
+    setState(() {
       isImporting = false;
     });
   }
